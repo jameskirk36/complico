@@ -4,6 +4,5 @@
 )
 
 (defroutes app
-  (GET "/" [] "Hello World")
-  (resources "/")
+  (GET "/convert" [url] "<head><base href=\"http://www.host.com\"/></head>")
 )
