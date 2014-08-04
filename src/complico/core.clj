@@ -3,19 +3,33 @@
   (use compojure.route)
   (use ring.middleware.params)
   (use [clojure.string :only [join split]])
+  (:require [clj-http.client :as client])
 )
 
 ; extract just the host from a URI
 (defn extract-host [url]
-  (join "" 
-    [(join "/" 
+  (str  
+    (join "/" 
       (take 3 
-        (split url #"/"))) "/"])) 
+        (split url #"/"))) "/")) 
+
+; create base html
+(defn create-base-html [url]
+  (str "<head><base href=\"" url \""/></head>"))
+
+(defn read-request-body [url] 
+  (:body (client/get url)))
 
 (defroutes my-handler
   (GET "/" [] "Welcome")
+  (GET "/test" [] "Test Page")
   (GET "/convert" {params :query-params} 
-    (str "<head><base href=\"" (extract-host (params "url"))  \""/></head>")))
+    (let [url (params "url")] 
+      (str 
+        (-> url
+          extract-host
+          create-base-html)
+        (read-request-body url)))))
 
 (def app
   (wrap-params my-handler))

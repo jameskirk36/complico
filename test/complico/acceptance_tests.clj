@@ -2,13 +2,17 @@
 	(:use 
 		[clojure.test]
 		[ring.mock.request]
-		[complico.core]))
+		[complico.core]
+      [ring.util.serve]))
 
 (deftest convert
   (testing "convert should add url as base element"
-    (let [response (app (request :get "/convert" {:url "http://www.host.com/page.html"} ))]
+    (serve my-handler)
+    (let [response (app (request :get "/convert" {:url "http://localhost:3000/test"} ))]
       (is (= (:status response) 200))
-		(println (:body response))
-      (is (= (.contains (:body response) "<head><base href=\"http://www.host.com/\"/></head>") true))))
+		;(println (:body response))
+      (is (= (.contains (:body response) 
+			"<head><base href=\"http://localhost:3000/\"/></head>Test Page") true)))
+    (stop-server))
 )
 
