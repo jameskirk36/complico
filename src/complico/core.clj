@@ -23,11 +23,11 @@
 
 ; prefix a link helper function for string/replace
 (defn prefix-link [[_ link]] 
-  (str "href=\"http://localhost:3000/convert?url=" link))
+  (str "a href=\"http://localhost:3000/convert?url=" link))
 
 ; prefix all the links in the body with host url convert link
 (defn grease-the-links [body]
-  (string/replace body #"href=\"(http)" prefix-link))
+  (string/replace body #"a href=\"(http)" prefix-link))
 
 (defroutes my-handler
   (GET "/" [] "Welcome")

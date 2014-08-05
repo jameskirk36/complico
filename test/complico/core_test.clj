@@ -5,4 +5,4 @@
 
 (deftest greasing-the-links
   (testing "Greasing the links"
-    (is (= (grease-the-links "href=\"http://somelink.com/\"" ) "href=\"http://localhost:3000/convert?url=http://somelink.com/\""))))
+    (is (= (grease-the-links "a href=\"http://somelink.com/\"" ) "a href=\"http://localhost:3000/convert?url=http://somelink.com/\""))))
