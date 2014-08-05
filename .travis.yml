@@ -1,2 +1,9 @@
 language: clojure
 lein: lein2
+deploy:
+  provider: heroku
+  api_key:
+    secure: Oj2pdBKVMOICUAhrSUXpYmCEUvmXD2pqf/Ykc22lI0bZFGdIoREtFMNL9+aBadZ+LrPp/DcI+201DMpIZIhQd43ycgz0Dt54+bg3UOc0DYRP/vM2VtHNk3GhW4eFKrSrWiXsNEfke/VWdokdZ2avGL++QbQfY8u2w+1hhTu4XkA=
+  app: complico
+  on:
+    repo: jameskirk84/complico
