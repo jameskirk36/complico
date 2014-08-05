@@ -9,7 +9,8 @@
                   [compojure "1.1.5"]
 						[ring-mock "0.1.5"]
 						[clj-http "0.9.2"]
-						[ring-serve "0.1.2"]]
+						[ring-serve "0.1.2"]
+						[ring/ring-jetty-adapter "1.1.6"]]
   
   :uberjar-name "complico.jar"
   :plugins  [[lein-ring "0.8.3"]]

@@ -3,7 +3,8 @@
   (use compojure.route)
   (use ring.middleware.params)
   (:require [clj-http.client :as client])
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string])
+  (:require [ring.adapter.jetty :as jetty]))
 
 ; extract just the host from a URI
 (defn extract-host [url]
@@ -44,3 +45,6 @@
 
 (def app
   (wrap-params my-handler))
+
+(defn -main [port]
+  (jetty/run-jetty app {:port (Integer. port) :join? false}))
