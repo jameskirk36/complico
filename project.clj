@@ -13,4 +13,5 @@
   
   :uberjar-name "complico.jar"
   :plugins  [[lein-ring "0.8.3"]]
-  :ring  {:handler complico.core/app} )
+  :ring  {:handler complico.core/app}
+  :min-lein-version "2.0.0")
