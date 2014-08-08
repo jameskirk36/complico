@@ -21,17 +21,22 @@
 (defn read-request-body [url] 
   (:body (client/get url)))
 
-; prefix all the links in the body with host url convert link
-(defn grease-the-links [body host port]
-  (string/replace body #"a href=\"(http)"
-    #(str "a href=\"http://" host ":" port "/convert?url=" (%1 1))))
+; add complicos link to href="http.." fully qualified links
+(defn grease-the-full-links [body server port]
+  (string/replace body #"a href=\"http"
+    (str "a href=\"http://" server ":" port "/convert?url=http")))
+
+; add complicos link and host to href="/" relative links
+(defn grease-the-relative-links [body server port host]
+  (string/replace body #"a href=\"/"
+    (str "a href=\"http://" server ":" port "/convert?url=" host)))
 
 (defroutes my-handler
   (GET "/" [] "Welcome")
   ; route for testing only
   (GET "/test_full_link" [] "Test Page<a href=\"http://somelink.com/\">")
-  (GET "/test_relative_link" [] "Test Page<a href=\"/\">")
-  (GET "/convert" {params :query-params host :server-name port :server-port} 
+  (GET "/test_relative_link" [] "Test Page<a href=\"/duff\">")
+  (GET "/convert" {params :query-params server :server-name port :server-port} 
     (let [url (params "url")] 
       (str 
         (-> url
@@ -39,8 +44,8 @@
           create-base-html)
         (-> url
           read-request-body
-          (grease-the-links host port))
-        ))))
+          (grease-the-full-links server port)
+          (grease-the-relative-links server port (extract-host url)))))))
 
 (def app
   (wrap-params my-handler))

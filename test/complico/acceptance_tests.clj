@@ -15,7 +15,6 @@
   (testing "should add host url as base element to request body"
     (let [response (app (request :get "/convert" {:url test-url-with-full-link} ))]
       (is (= (:status response) 200))
-		;(println (:body response))
       (is (= (.contains (:body response) 
 			"<head><base href=\"http://localhost:3000/\"/></head>Test Page") true))))
 
@@ -23,6 +22,11 @@
     (let [response (app (request :get "/convert" {:url test-url-with-full-link} ))] 
       (is (= (.contains (:body response) 
         "<a href=\"http://localhost:80/convert?url=http://somelink.com/\">") true))))
+
+  (testing "should greasemonkey the relateive links on the page"
+    (let [response (app (request :get "/convert" {:url test-url-with-relative-link} ))] 
+      (is (= (.contains (:body response) 
+        "<a href=\"http://localhost:80/convert?url=http://localhost:3000/duff\">") true))))
 
   ;stop the ring server
   (stop-server))
