@@ -21,18 +21,16 @@
 (defn read-request-body [url] 
   (:body (client/get url)))
 
-; prefix a link helper function for string/replace
-(defn prefix-link [[_ link]] 
-  (str "a href=\"http://localhost:3000/convert?url=" link))
-
 ; prefix all the links in the body with host url convert link
-(defn grease-the-links [body]
-  (string/replace body #"a href=\"(http)" prefix-link))
+(defn grease-the-links [body host port]
+  (string/replace body #"a href=\"(http)"
+    #(str "a href=\"http://" host ":" port "/convert?url=" (%1 1))))
 
 (defroutes my-handler
   (GET "/" [] "Welcome")
+  ; route for testing only
   (GET "/test" [] "Test Page<a href=\"http://somelink.com/\">")
-  (GET "/convert" {params :query-params} 
+  (GET "/convert" {params :query-params host :server-name port :server-port} 
     (let [url (params "url")] 
       (str 
         (-> url
@@ -40,7 +38,7 @@
           create-base-html)
         (-> url
           read-request-body
-          grease-the-links)
+          (grease-the-links host port))
         ))))
 
 (def app

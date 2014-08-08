@@ -19,7 +19,7 @@
   (testing "should greasemonkey the links on the page"
     (let [response (app (request :get "/convert" {:url "http://localhost:3000/test"} ))] 
       (is (= (.contains (:body response) 
-        "<a href=\"http://localhost:3000/convert?url=http://somelink.com/\">") true))))
+        "<a href=\"http://localhost:80/convert?url=http://somelink.com/\">") true))))
 
   ;stop the ring server
   (stop-server))
