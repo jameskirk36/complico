@@ -29,7 +29,8 @@
 (defroutes my-handler
   (GET "/" [] "Welcome")
   ; route for testing only
-  (GET "/test" [] "Test Page<a href=\"http://somelink.com/\">")
+  (GET "/test_full_link" [] "Test Page<a href=\"http://somelink.com/\">")
+  (GET "/test_relative_link" [] "Test Page<a href=\"/\">")
   (GET "/convert" {params :query-params host :server-name port :server-port} 
     (let [url (params "url")] 
       (str 
