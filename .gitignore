@@ -1,5 +1,6 @@
 /.env
 *.swp
+*.swo
 /target
 /classes
 /checkouts
