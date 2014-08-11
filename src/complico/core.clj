@@ -21,25 +21,32 @@
 (defn read-request-body [url] 
   (:body (client/get url)))
 
-; add complicos link to href="http.." fully qualified links
-(defn grease-the-full-links [body server port]
-  (string/replace body #"a href=\"http"
-    (str "a href=\"http://" server ":" port "/convert?url=http")))
-
-; add complicos link and host to href="/" relative links
-(defn grease-the-relative-links [body server port host]
-  (string/replace body #"a href=\"/"
-    (str "a href=\"http://" server ":" port "/convert?url=" host)))
-
 (defn find-links [body]
   (re-seq #"a href=\"(.+?)\"" body))
 
-(defn replace-links [body links]
-  (println links))
+(defn create-grease [server port]
+  (str "a href=\"http://" server ":" port "/convert?url="))
 
-(defn grease-the-links-new [body server port host]
+(defn grease-the-link [link grease host]
+  (cond
+    (.startsWith link "http") (str grease link "\"")
+    (.startsWith link "/") (str grease (apply str (drop-last 1 host)) link "\"") 
+    :else (str grease host link "\""))) 
+
+(defn replace-links [body links grease host]
+  (str
+  (reduce 
+    #(apply string/replace %1 %2)
+    body
+    (map 
+      #(vector 
+        (first %)
+        (grease-the-link (last %) grease host)) links)
+     )))
+
+(defn grease-the-links [body server port host]
   (let [links (find-links body)]
-    (replace-links body links)))
+    (replace-links body links (create-grease server port) host)))
 
 (defroutes my-handler
   (GET "/" [] "Welcome")
@@ -54,8 +61,7 @@
           create-base-html)
         (-> url
           read-request-body
-          (grease-the-full-links server port)
-          (grease-the-relative-links server port (extract-host url)))))))
+          (grease-the-links server port (extract-host url)))))))
 
 (def app
   (wrap-params my-handler))
