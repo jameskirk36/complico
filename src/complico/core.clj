@@ -31,6 +31,16 @@
   (string/replace body #"a href=\"/"
     (str "a href=\"http://" server ":" port "/convert?url=" host)))
 
+(defn find-links [body]
+  (re-seq #"a href=\"(.+?)\"" body))
+
+(defn replace-links [body links]
+  (println links))
+
+(defn grease-the-links-new [body server port host]
+  (let [links (find-links body)]
+    (replace-links body links)))
+
 (defroutes my-handler
   (GET "/" [] "Welcome")
   ; route for testing only
