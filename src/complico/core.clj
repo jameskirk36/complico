@@ -36,26 +36,32 @@
     (.startsWith link "/") (str grease (apply str (drop-last 1 host)) link "\"") 
     :else (str grease host link "\""))) 
 
-; replace all the links in the body with their greased equivalents
-(defn replace-links [body links grease host]
+; replace all the occurances of a find-replace map in a string
+(defn replace-all-in-string [string replacement-map]
   (str
     (reduce 
       #(apply string/replace %1 %2)
-      body
-      (map 
-        #(vector 
-          (first %)
-          (grease-the-link 
-            (last %)
-            grease
-            host))
-       links)
+      string
+      replacement-map
      )))
 
-; 
-(defn grease-the-links [body server port host]
-  (let [links (find-links body)]
-    (replace-links body links (create-grease server port) host)))
+
+; build a map of links and their greased replacements
+(defn build-greased-link-map [links grease host]
+  (map 
+    #(vector 
+       (first %)
+       (grease-the-link 
+         (last %)
+         grease
+         host))
+       links))
+
+; find all links and build a map of links and their greased replacement
+(defn build-link-replacement-map [body server port host]
+  (let [links (find-links body)
+        grease (create-grease server port)]
+        (build-greased-link-map links grease host)))
 
 (defroutes my-handler
   (GET "/" [] "Welcome")
@@ -64,14 +70,14 @@
   (GET "/test_relative_link" [] "Test Page<a href=\"/duff\">")
   ; entry point for complicos complicated prices!
   (GET "/convert" {params :query-params server :server-name port :server-port} 
-    (let [url (params "url")] 
+    (let [url (params "url")
+          host (extract-host url)] 
       (str 
-        (-> url
-          extract-host
-          create-base-html)
-        (-> url
-          read-request-body
-          (grease-the-links server port (extract-host url)))))))
+        (create-base-html host)
+        (let [body (read-request-body url)
+              host (extract-host url)]
+          (let [replacement-link-map (build-link-replacement-map body server port host)]
+            (replace-all-in-string body replacement-link-map)))))))
 
 ; needed to gain access to query parameters in my-handler
 (def app
