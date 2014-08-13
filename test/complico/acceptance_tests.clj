@@ -9,11 +9,15 @@
 
 (def test-url-with-relative-link "http://localhost:3000/test_relative_link")
 
+(def test-url-with-prices "http://localhost:3000/test_prices")
+
 (def expected-base-html "<head><base href=\"http://localhost:3000/\"/></head>Test Page")
 
 (def expected-full-link "<a href=\"http://localhost:80/convert?url=http://somelink.com/\">")
 
 (def expected-relative-link "<a href=\"http://localhost:80/convert?url=http://localhost:3000/duff\">")
+
+(def expected-prices "£XXX £XXX £NOTTHIS")
 
 (deftest convert
   ; start the server, headless
@@ -37,6 +41,12 @@
       (is (.contains 
             (:body response) 
             expected-relative-link))))
+
+  (testing "should complicate the prices on the page"
+    (let [response (app (request :get "/convert" {:url test-url-with-prices} ))] 
+      (is (.contains 
+            (:body response) 
+            expected-prices))))
 
   ;stop the ring server
   (stop-server))

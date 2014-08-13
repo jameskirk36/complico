@@ -55,7 +55,7 @@
          (last %)
          grease
          host))
-       links))
+    links))
 
 ; find all links and build a map of links and their greased replacement
 (defn build-link-replacement-map [body server port host]
@@ -63,11 +63,31 @@
         grease (create-grease server port)]
         (build-greased-link-map links grease host)))
 
+(defn find-prices [body]
+  (re-seq #"£(\d+\.?\d*)" body))
+
+
+(defn convert-price [price]
+  "£XXX")
+
+(defn convert-prices [prices]
+  (map
+    #(vector
+      (first %)
+      (convert-price (last %)))
+    prices))
+  
+
+(defn build-price-replacement-map [body]
+  (let [prices (find-prices body)]
+    (convert-prices prices)))
+
 (defroutes my-handler
   (GET "/" [] "Welcome")
   ; routes for testing only
   (GET "/test_full_link" [] "Test Page<a href=\"http://somelink.com/\">")
   (GET "/test_relative_link" [] "Test Page<a href=\"/duff\">")
+  (GET "/test_prices" [] "Test Page £2 £3.00 £NOTTHIS")
   ; entry point for complicos complicated prices!
   (GET "/convert" {params :query-params server :server-name port :server-port} 
     (let [url (params "url")
@@ -76,8 +96,9 @@
         (create-base-html host)
         (let [body (read-request-body url)
               host (extract-host url)]
-          (let [replacement-link-map (build-link-replacement-map body server port host)]
-            (replace-all-in-string body replacement-link-map)))))))
+          (let [replacement-link-map (build-link-replacement-map body server port host)
+                replacement-prices-map (build-price-replacement-map body)]
+            (replace-all-in-string body (into [] (concat replacement-link-map replacement-prices-map)))))))))
 
 ; needed to gain access to query parameters in my-handler
 (def app
