@@ -21,20 +21,20 @@
 (defn read-request-body [url] 
   (:body (client/get url)))
 
-; find a sequence of anchor links in a given body
+; find a sequence of anchor/area links in a given body
 (defn find-links [body]
-  (re-seq #"a href=\"(.+?)\"" body))
+  (re-seq #"<(a.*?)href=\"(.+?)\"" body))
 
-; create the prefix to add to all anchor links
+; create the prefix to add to all links
 (defn create-grease [server port]
-  (str "a href=\"http://" server ":" port "/convert?url="))
+  (str "http://" server ":" port "/convert?url="))
 
 ; apply grease to different kinds of links
-(defn grease-the-link [link grease host]
+(defn grease-the-link [element link grease host]
   (cond
-    (.startsWith link "http") (str grease link "\"")
-    (.startsWith link "/") (str grease (apply str (drop-last 1 host)) link "\"") 
-    :else (str grease host link "\""))) 
+    (.startsWith link "http") (str "<" element "href=\"" grease link "\"")
+    (.startsWith link "/") (str "<" element "href=\"" grease (apply str (drop-last 1 host)) link "\"") 
+    :else (str "<" element "href=\"" grease host link "\""))) 
 
 ; replace all the occurances of a find-replace map in a string
 (defn replace-all-in-string [string replacement-map]
@@ -52,6 +52,7 @@
     #(vector 
        (first %)
        (grease-the-link 
+         (second %)
          (last %)
          grease
          host))

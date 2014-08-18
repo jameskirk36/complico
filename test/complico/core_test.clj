@@ -31,4 +31,16 @@
     (is (= (let [html "<a href=\"/duff\"/>"]
               (replace-all-in-string html 
                  (build-link-replacement-map html server-name server-port host)))
-            "<a href=\"http://localhost:3000/convert?url=http://somelink.com/duff\"/>"))))
+            "<a href=\"http://localhost:3000/convert?url=http://somelink.com/duff\"/>")))
+
+  (testing "Grease the dirty anchor"
+    (is (= (let [html "<a class=\"class\" href=\"/duff\"/>"]
+              (replace-all-in-string html 
+                 (build-link-replacement-map html server-name server-port host)))
+            "<a class=\"class\" href=\"http://localhost:3000/convert?url=http://somelink.com/duff\"/>")))
+
+  (testing "Grease the area element links"
+    (is (= (let [html "<area href=\"http://anotherhost.com/duff\"/>"]
+              (replace-all-in-string html 
+                 (build-link-replacement-map html server-name server-port host)))
+            "<area href=\"http://localhost:3000/convert?url=http://anotherhost.com/duff\"/>"))))
