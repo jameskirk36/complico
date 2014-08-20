@@ -64,6 +64,25 @@
         grease (create-grease server port)]
         (build-greased-link-map links grease host)))
 
+(defn find-forms [body] 
+  (re-seq #"<form\s(.*?)action=\"(.*?)\">" body))
+
+(defn grease-the-form [attributes action grease]
+  (str "<form " attributes "action=\"" grease "\">\n" "<input type=\"hidden\" name=\"url\" value=\"" action "?test=test\"/>" ))
+
+(defn grease-the-forms [forms host]
+  (map 
+    #(vector 
+      (first %)
+      (grease-the-form 
+        (second %)
+        (last %)
+        host))
+    forms))
+
+(defn build-form-replacement-map [body host]
+  (grease-the-forms (find-forms body) (str host "convert")))
+
 (defn find-prices [body]
   (re-seq #"£(\d+\.?\d*)" body))
 
@@ -89,6 +108,10 @@
   (GET "/test_full_link" [] "Test Page<a href=\"http://somelink.com/\">")
   (GET "/test_relative_link" [] "Test Page<a href=\"/duff\">")
   (GET "/test_prices" [] "Test Page £2 £3.00 £NOTTHIS")
+  (GET "/test_form" [] 
+"<form class=\"\" action=\"http://anotherhost.com/duff\">
+<input name=\"name\" value=\"value\"/>
+</form>")
   ; entry point for complicos complicated prices!
   (GET "/convert" {params :query-params server :server-name port :server-port} 
     (let [url (params "url")
@@ -98,8 +121,10 @@
         (let [body (read-request-body url)
               host (extract-host url)]
           (let [replacement-link-map (build-link-replacement-map body server port host)
+                replacement-form-map (build-form-replacement-map body host)
                 replacement-prices-map (build-price-replacement-map body)]
-            (replace-all-in-string body (into [] (concat replacement-link-map replacement-prices-map)))))))))
+
+            (replace-all-in-string body (into [] (concat replacement-link-map replacement-prices-map replacement-form-map)))))))))
 
 ; needed to gain access to query parameters in my-handler
 (def app
@@ -108,3 +133,4 @@
 ; entry point for running on heroku
 (defn -main [port]
   (jetty/run-jetty app {:port (Integer. port) :join? false}))
+
