@@ -59,7 +59,7 @@
   (testing "should greasemonkey the forms"
     (let [response (app (request :get "/convert" {:url test-url-with-form} ))] 
       (is (.contains 
-            (:body response) 
+            (:body response)
             expected-form))))
 
   ;stop the ring server

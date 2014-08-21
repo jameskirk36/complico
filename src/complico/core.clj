@@ -65,18 +65,19 @@
         (build-greased-link-map links grease host)))
 
 (defn find-forms [body] 
-  (re-seq #"<form\s(.*?)action=\"(.*?)\">" body))
+  (re-seq #"<form\s(.*?)action=\"(.*?)\"(.*?)>" body))
 
-(defn grease-the-form [attributes action grease]
-  (str "<form " attributes "action=\"" grease "\">\n" "<input type=\"hidden\" name=\"url\" value=\"" action "?test=test\"/>" ))
+(defn grease-the-form [attributes-before action attributes-after grease]
+  (str "<form " attributes-before "action=\"" grease "\"" attributes-after ">\n" "<input type=\"hidden\" name=\"url\" value=\"" action "?test=test\"/>" ))
 
 (defn grease-the-forms [forms host]
   (map 
     #(vector 
-      (first %)
+      (nth % 0)
       (grease-the-form 
-        (second %)
-        (last %)
+        (nth % 1)
+        (nth % 2)
+        (nth % 3)
         host))
     forms))
 
