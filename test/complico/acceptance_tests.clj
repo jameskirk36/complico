@@ -22,7 +22,7 @@
 (def expected-prices "£XXX £XXX £NOTTHIS")
 
 (def expected-form 
-"<form class=\"\" action=\"http://localhost:3000/convert\">
+"<form class=\"\" action=\"http://localhost:80/convert\">
 <input type=\"hidden\" name=\"url\" value=\"http://anotherhost.com/duff?test=test\"/>
 <input name=\"name\" value=\"value\"/>
 </form>")

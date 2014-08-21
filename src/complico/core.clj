@@ -80,8 +80,8 @@
         host))
     forms))
 
-(defn build-form-replacement-map [body host]
-  (grease-the-forms (find-forms body) (str host "convert")))
+(defn build-form-replacement-map [body server port]
+  (grease-the-forms (find-forms body) (str "http://" server ":" port "/convert")))
 
 (defn find-prices [body]
   (re-seq #"£(\d+\.?\d*)" body))
@@ -121,7 +121,7 @@
         (let [body (read-request-body url)
               host (extract-host url)]
           (let [replacement-link-map (build-link-replacement-map body server port host)
-                replacement-form-map (build-form-replacement-map body host)
+                replacement-form-map (build-form-replacement-map body server port)
                 replacement-prices-map (build-price-replacement-map body)]
 
             (replace-all-in-string body (into [] (concat replacement-link-map replacement-prices-map replacement-form-map)))))))))
