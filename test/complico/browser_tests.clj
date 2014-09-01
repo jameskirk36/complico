@@ -22,10 +22,16 @@
 
 (use-fixtures :once setup-teardown-fixtures)
 
-(def first-page "http://localhost:3000/first_test_page")
+(def first-page "http://localhost:3000/test_start_page")
+(def show-page-with-prices "a#test_page_with_prices")
+(def expected-price "£XXX")
 
-(deftest user-can-follow-greased-anchor-links
+(defn extract-price-from-page []
+  (text (element "div#price")))
+
+(deftest user-follows-link-sees-converted-prices
   (to first-page)
-  (click "a#second_page")
-  (is (= (title) "Second test page" )))
+  (click show-page-with-prices)
+  (is (= (extract-price-from-page) expected-price)))
+
 

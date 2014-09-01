@@ -3,14 +3,14 @@
   (use compojure.route)
   (:require [ring.adapter.jetty :as jetty]))
 
-(def link-to-second-page 
-  "<a id=\"second_page\" href=\"http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Fsecond_test_page\">Second page link</a>")
+(def link-to-prices-page 
+  "<a id=\"test_page_with_prices\" href=\"http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_prices\">Show prices</a>")
 
 (defroutes my-handler
-  (GET "/first_test_page" [] 
-    link-to-second-page)
+  (GET "/test_start_page" [] 
+    link-to-prices-page)
   (GET "/convert" []
-    "<title>Second test page</title>"))
+    "<div id=\"price\">£XXX</div>"))
 
 ; needed to gain access to query parameters in my-handler
 (def app my-handler)
