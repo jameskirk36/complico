@@ -6,21 +6,21 @@
             [clj-http.client :as client]))
 
 ; make a http request to url and download the body as string
-(defn make-get-request [url] 
+(defn request-url-page [url] 
   (:body (client/get url)))
 
-(def link-greasing-js 
-"<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>
-<script type=\"text/javascript\">
-$(function(){
-
-  var foundin = $('a').each(function(index){
-  var link = $(this).attr('href');
-  var newLink = 'http://localhost:3000/convert?url=' + link;
-  $(this).attr('href', newLink); 
-});
-});
-</script>")
+(defn create-link-greasing-js [server port]
+  (str "<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>
+  <script type=\"text/javascript\">
+  $(function(){
+  
+    var foundin = $('a').each(function(index){
+    var link = $(this).attr('href');
+    var newLink = http://" server ":" port "/convert?url=' + encodeURIComponent(link);
+    $(this).attr('href', newLink); 
+  });
+  });
+  </script>"))
 
 (def start-page-html 
   "<a id=\"test_page_with_prices\" href=\"http://localhost:3000/test_page_with_prices\">Show prices</a>")
@@ -32,8 +32,8 @@ $(function(){
     start-page-html)
   (GET "/test_page_with_prices" []
     price-page-html)
-  (GET "/convert" {params :query-params}
-    (str (make-get-request (params "url")) link-greasing-js)))
+  (GET "/convert" {params :query-params server :server-name port :server-port}
+    (str (request-url-page (params "url")) (create-link-greasing-js server port))))
 
 ; needed to gain access to query parameters in my-handler
 (def app 
