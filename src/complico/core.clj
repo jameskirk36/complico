@@ -16,7 +16,7 @@
   
     var foundin = $('a').each(function(index){
     var link = $(this).attr('href');
-    var newLink = http://" server ":" port "/convert?url=' + encodeURIComponent(link);
+    var newLink = 'http://" server ":" port "/convert?url=' + encodeURIComponent(link);
     $(this).attr('href', newLink); 
   });
   });
