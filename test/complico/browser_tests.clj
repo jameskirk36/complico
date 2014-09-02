@@ -22,8 +22,8 @@
 
 (use-fixtures :once setup-teardown-fixtures)
 
-(def first-page "http://localhost:3000/test_start_page")
-(def show-page-with-prices "a#test_page_with_prices")
+(def first-page "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_start_page")
+(def link-to-prices-page "a#test_page_with_prices")
 (def expected-price "£XXX")
 
 (defn extract-price-from-page []
@@ -31,7 +31,7 @@
 
 (deftest user-follows-link-sees-converted-prices
   (to first-page)
-  (click show-page-with-prices)
+  (click link-to-prices-page)
   (is (= (extract-price-from-page) expected-price)))
 
 
