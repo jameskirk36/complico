@@ -22,8 +22,8 @@
 
 (use-fixtures :once setup-teardown-fixtures)
 
-(def test-page-with-prices "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_prices")
-(def test-page-with-links "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_links")
+(def test-page-with-prices "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_prices.html")
+(def test-page-with-links "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_links.html")
 (def expected-price "£XXX")
 (def expected-link "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_link")
 
