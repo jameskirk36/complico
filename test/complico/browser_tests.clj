@@ -22,16 +22,21 @@
 
 (use-fixtures :once setup-teardown-fixtures)
 
-(def first-page "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_start_page")
-(def link-to-prices-page "a#test_page_with_prices")
+(def test-page-with-prices "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_prices")
+(def test-page-with-links "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_links")
 (def expected-price "£XXX")
+(def expected-link "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_link")
 
 (defn extract-price-from-page []
   (text (element "div#price")))
+(defn extract-link-from-page []
+  (attribute "a#test_link" :href))
 
-(deftest user-follows-link-sees-converted-prices
-  (to first-page)
-  (click link-to-prices-page)
+(deftest user-should-see-converted-prices-when-visiting-pages
+  (to test-page-with-prices)
   (is (= (extract-price-from-page) expected-price)))
 
+(deftest links-should-be-greased-when-visiting-pages
+  (to test-page-with-links)
+  (is (= (extract-link-from-page) expected-link)))
 

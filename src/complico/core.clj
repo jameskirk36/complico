@@ -1,9 +1,9 @@
 (ns complico.core
   (use compojure.core)
-  (use compojure.route)
   (use ring.middleware.params)
   (:require [ring.adapter.jetty :as jetty]
-            [clj-http.client :as client]))
+            [clj-http.client :as client]
+            [compojure.route :as route]))
 
 ; make a http request to url and download the body as string
 (defn request-url-page [url] 
@@ -30,18 +30,11 @@
    }); 
   </script>"))
 
-(def start-page-html 
-  "<a id=\"test_page_with_prices\" href=\"http://localhost:3000/test_page_with_prices\">Show prices</a>")
-(def price-page-html
- "<div id=\"price\">£3</div>")
-
 (defroutes my-handler
-  (GET "/test_start_page" [] 
-    start-page-html)
-  (GET "/test_page_with_prices" []
-    price-page-html)
   (GET "/convert" {params :query-params server :server-name port :server-port}
-    (str (request-url-page (params "url")) (create-js server port))))
+    (str (request-url-page (params "url")) (create-js server port)))
+  (route/resources "/")
+  (route/not-found "Page not found"))
 
 ; needed to gain access to query parameters in my-handler
 (def app 
