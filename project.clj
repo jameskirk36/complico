@@ -5,19 +5,19 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :source-paths ["src-clj"]
   :dependencies [
-                  [org.clojure/clojure "1.5.1"]
+                  [org.clojure/clojure "1.6.0"]
                   [ring/ring-core "1.1.8"]
                   [ring/ring-jetty-adapter "1.1.8"]
                   [compojure "1.1.5"]
                   [clj-http "0.9.2"]
 						[clj-webdriver "0.6.1"]
-                  [org.clojure/clojurescript "0.0-2197"]]
+                  [org.clojure/clojurescript "0.0-2322"]]
   
   :uberjar-name "complico.jar"
   :plugins  [[lein-ring "0.8.3"]
              [lein-cljsbuild "1.0.3"]]
   :ring  {:handler complico.core/app}
-;  :hooks [leiningen.cljsbuild]
+  :hooks [leiningen.cljsbuild]
   ; clojurescript settings
   :cljsbuild {
     :test-commands
