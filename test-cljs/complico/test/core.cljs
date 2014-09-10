@@ -1,7 +1,13 @@
 (ns complico.test.core
-  (:use [complico.core :only [add-some-numbers]]))
+  (:use [complico.core :only [grease-the-link]]))
+
+(def ungreased-full-link "http://someurl.com/page")
+(def expected-greased-full-link "http://localhost:3000/convert?url=http%3A%2F%2Fsomeurl.com%2Fpage")
+
+(def server "http://localhost")
+(def port "3000")
 
 (defn run []
-  (assert (= (add-some-numbers 2 2) 5))
-  (assert (= (add-some-numbers 1 2 3) 6))
-  (assert (= (add-some-numbers 4 5 6) 15)))
+  (assert (= (grease-the-link server port ungreased-full-link) expected-greased-full-link)))
+
+
