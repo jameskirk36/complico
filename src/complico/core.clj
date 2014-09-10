@@ -30,14 +30,13 @@
         var link = $(this).attr('href');
         if(link !== undefined){
           var newLink = complico.core.grease_the_link('" host "', '" grease "', link);
-console.log('Greased link' + newLink);
           $(this).attr('href', newLink); 
         }
       });
     };
     var replacePrices = function(){
-      var found = $('div').each(function(index){
-        $(this).text('£XXX');
+      var found = $('*:not(:has(*)):contains(\"\u00A3\")').each(function(index){
+        $(this).text('\u00A3XXX');
       });
     };
     greaseLinks();

@@ -24,17 +24,19 @@
 
 (def test-page-with-prices "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_prices.html")
 (def test-page-with-links "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_links.html")
-(def expected-price "£XXX")
+(def expected-price "\u00A3XXX")
 (def expected-link "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_link")
 
-(defn extract-price-from-page []
-  (text (element "div#price")))
+(defn extract-price-from [element-name]
+  (text (element (str element-name "#price"))))
+
 (defn extract-link-from-page []
   (attribute "a#test_link" :href))
 
 (deftest user-should-see-converted-prices-when-visiting-pages
   (to test-page-with-prices)
-  (is (= (extract-price-from-page) expected-price)))
+  (is (= (extract-price-from "div") expected-price))
+  (is (= (extract-price-from "span") expected-price)))
 
 (deftest links-should-be-greased-when-visiting-pages
   (to test-page-with-links)
