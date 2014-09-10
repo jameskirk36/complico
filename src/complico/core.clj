@@ -3,21 +3,36 @@
   (use ring.middleware.params)
   (:require [ring.adapter.jetty :as jetty]
             [clj-http.client :as client]
-            [compojure.route :as route]))
+            [compojure.route :as route]
+            [clojure.string :as string]))
+
+; extract just the host from a URI
+(defn extract-host [url]
+  (str  
+    (string/join "/" 
+      (take 3 
+        (string/split url #"/"))) "/"))
 
 ; make a http request to url and download the body as string
 (defn request-url-page [url] 
   (:body (client/get url)))
 
-(defn create-js [server port]
+(defn create-grease [server port]
+  (str "http://" server ":" port "/convert?url="))
+
+(defn create-js [host grease]
   (str "<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>
+  <script src=\"js/complico-debug.js\"></script>
   <script type=\"text/javascript\">
   $(function(){
     var greaseLinks = function(){ 
       var foundin = $('a').each(function(index){
         var link = $(this).attr('href');
-        var newLink = 'http://" server ":" port "/convert?url=' + encodeURIComponent(link);
-        $(this).attr('href', newLink); 
+        if(link !== undefined){
+          var newLink = complico.core.grease_the_link('" host "', '" grease "', link);
+console.log('Greased link' + newLink);
+          $(this).attr('href', newLink); 
+        }
       });
     };
     var replacePrices = function(){
@@ -32,7 +47,10 @@
 
 (defroutes my-handler
   (GET "/convert" {params :query-params server :server-name port :server-port}
-    (str (request-url-page (params "url")) (create-js server port)))
+    (let [url (params "url")
+          host (extract-host url)
+          grease (create-grease server port)]
+      (str (request-url-page url) (create-js host grease))))
   (route/resources "/")
   (route/not-found "Page not found"))
 

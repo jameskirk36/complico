@@ -4,6 +4,6 @@
 (def success 0)
 
 (defn ^:export run []
-  (.log js/console "Example test started.")
+  (.log js/console "Complico clojurescript unit tests started")
   (core/run)
   success)
