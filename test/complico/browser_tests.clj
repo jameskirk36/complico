@@ -22,23 +22,29 @@
 
 (use-fixtures :once setup-teardown-fixtures)
 
-(def test-page-with-prices "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_prices.html")
-(def test-page-with-links "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_links.html")
+(def home-page "http://localhost:3000/")
+(def expected-link "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_links.html")
 (def expected-price "\u00A3XXX")
-(def expected-link "http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_link")
+(def link-to-page-with-prices "a#test_page_with_prices")
+(def link-to-page-with-links "a#test_page_with_links")
 
 (defn extract-price-from [element-name]
   (text (element (str element-name "#price"))))
 
 (defn extract-link-from-page []
-  (attribute "a#test_link" :href))
+  (attribute link-to-page-with-links :href))
 
-(deftest user-should-see-converted-prices-when-visiting-pages
-  (to test-page-with-prices)
+(deftest user-journey-does-it-basically-work
+  (to home-page)
+  ; this cookie ensures we avoid performing a real search on an external search engine
+  (add-cookie {:name "test" :value "test"})
+
+  (-> "input#search"
+    (input-text "search-term-goes-here")
+    submit)
+  ; need this check because we are hosting page on same server!
+  (is (= (extract-link-from-page) expected-link))
+  (click link-to-page-with-links)
+  (click link-to-page-with-prices)
   (is (= (extract-price-from "div") expected-price))
   (is (= (extract-price-from "span") expected-price)))
-
-(deftest links-should-be-greased-when-visiting-pages
-  (to test-page-with-links)
-  (is (= (extract-link-from-page) expected-link)))
-
