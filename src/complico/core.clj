@@ -12,6 +12,10 @@
 ; url of the external search engine to use
 (def external-search-url "http://www.bing.com/search?q=")
 
+; create base html
+(defn create-base-html [url]
+  (str "<head><base href=\"" url "\"/></head>"))
+
 ; extract just the host from a URI
 (defn extract-host [url]
   (str  
@@ -23,19 +27,22 @@
 (defn request-url-page [url] 
   (:body (client/get url)))
 
-(defn create-grease [server port]
-  (str "http://" server ":" port "/convert?url="))
+(defn create-grease [host]
+  (str host "/convert?url="))
 
-(defn create-js [host grease]
+(defn create-host [server port]
+  (str "//" server ":" port))
+
+(defn create-js [original-host complico-host]
   (str "<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>
-  <script src=\"js/complico-debug.js\"></script>
+  <script src=\"" complico-host "/js/complico-debug.js\"></script>
   <script type=\"text/javascript\">
   $(function(){
     var greaseLinks = function(){ 
       var foundin = $('a').each(function(index){
         var link = $(this).attr('href');
         if(link !== undefined){
-          var newLink = complico.core.grease_the_link('" host "', '" grease "', link);
+          var newLink = complico.core.grease_the_link('" original-host "', '" complico-host "/convert?url=', link);
           $(this).attr('href', newLink); 
         }
       });
@@ -59,16 +66,19 @@
 
   (GET "/search" {cookies :cookies params :query-params server :server-name port :server-port}
     (let [search-term (params "search-term")
-          grease (create-grease server port)]
+          grease (create-grease (create-host server port))]
       (cond 
         (contains? cookies "test") "<a id='test_page_with_links' href='http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_links.html'>Test Link</a>"
         :else (response/redirect (str grease (codec/url-encode (str external-search-url search-term)))))))
 
   (GET "/convert" {params :query-params server :server-name port :server-port}
     (let [url (params "url")
-          host (extract-host url)
-          grease (create-grease server port)]
-      (str (request-url-page url) (create-js host grease))))
+          original-host (extract-host url)
+          base-element (create-base-html original-host)
+          original-page-html (request-url-page url)
+          complico-host (create-host server port)
+          complico-js (create-js original-host complico-host)]
+      (str base-element original-page-html complico-js)))
   (route/resources "/")
   (route/not-found "Page not found"))
 
