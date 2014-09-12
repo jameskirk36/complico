@@ -27,6 +27,7 @@
 (def expected-price "\u00A3XXX")
 (def link-to-page-with-prices "a#test_page_with_prices")
 (def link-to-page-with-links "a#test_page_with_links")
+(def ribbon-link "a#complico-ribbon-link")
 
 (defn extract-price-from [element-name]
   (text (element (str element-name "#price"))))
@@ -48,3 +49,15 @@
   (click link-to-page-with-prices)
   (is (= (extract-price-from "div") expected-price))
   (is (= (extract-price-from "span") expected-price)))
+
+(deftest clicking-on-ribbon-goes-back-to-homepage
+  (to home-page)
+  ; this cookie ensures we avoid performing a real search on an external search engine
+  (add-cookie {:name "test" :value "test"})
+
+  (-> "input#search"
+    (input-text "search-term-goes-here")
+    submit)
+
+  (click ribbon-link)
+  (is (= (current-url) home-page)))

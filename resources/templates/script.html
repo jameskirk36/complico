@@ -16,7 +16,12 @@
         $(this).text('\u00A3XXX');
       });
     };
+    var addRibbon = function(){
+      $("body").append("<a id='complico-ribbon-link' href='{{complico-host}}'><img style='position: absolute; top: 0; right: 0; border: 0; z-index: 9000;' src='{{complico-host}}/images/ribbon.png'></a>");
+    };
     greaseLinks();
     replacePrices();
+    addRibbon();
    }); 
 </script>
+

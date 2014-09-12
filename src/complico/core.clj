@@ -14,13 +14,7 @@
 (def external-search-url "http://www.bing.com/search?q=")
 
 (def home-page 
-  "<form method='get' action='/search'>
-       <input id='search' type='text' name='search-term'></input>
-       <button type='submit'>Go</input>
-     </form>")
-
-(def mock-search-results-page 
-  "<a id='test_page_with_links' href='http://localhost:3000/convert?url=http%3A%2F%2Flocalhost%3A3000%2Ftest_page_with_links.html'>Test Link</a>")
+  (selmer/render-file "templates/index.html" {}))
 
 ; create base html
 (defn create-base-html [url]
@@ -48,16 +42,19 @@
     {:complico-host complico-host 
      :original-host original-host}))
 
+(defn mock-search-results-page []
+  (str "<body><a id='test_page_with_links' href='http://localhost:3000/test_page_with_links.html'>Test Link</a></body>"
+   (create-script-html "" "http://localhost:3000")))
+
 (defroutes my-handler
   (GET "/" [] 
     home-page)
 
   (GET "/search" {cookies :cookies params :query-params server :server-name port :server-port}
-    (let [search-term (params "search-term")
+    (if (contains? cookies "test") (mock-search-results-page)
+       (let [search-term (params "search-term")
           grease (create-grease (create-host server port))]
-      (cond 
-        (contains? cookies "test") mock-search-results-page 
-        :else (response/redirect (str grease (codec/url-encode (str external-search-url search-term)))))))
+            (response/redirect (str grease (codec/url-encode (str external-search-url search-term)))))))
 
   (GET "/convert" {params :query-params server :server-name port :server-port}
     (let [url (params "url")
