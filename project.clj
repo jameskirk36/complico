@@ -17,7 +17,6 @@
                   [org.clojure/clojurescript "0.0-2322"]]
   
   :uberjar-name "complico.jar"
-  :java-agents [[com.newrelic.agent.java/newrelic-agent "3.10.0"]]
   :plugins  [[lein-ring "0.8.3"]
              [lein-cljsbuild "1.0.3"]]
   :ring  {:handler complico.core/app}
