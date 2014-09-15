@@ -28,8 +28,8 @@
         (string/split url #"/"))) "/"))
 
 ; make a http request to url and download the body as string
-(defn request-url-page [url] 
-  (:body (client/get url)))
+(defn request-url-page [url user-agent] 
+  (:body (client/get url {:headers {"user-agent" user-agent}})))
 
 (defn create-grease [host]
   (str host "/convert?url="))
@@ -56,11 +56,11 @@
           grease (create-grease (create-host server port))]
             (response/redirect (str grease (codec/url-encode (str external-search-url search-term)))))))
 
-  (GET "/convert" {params :query-params server :server-name port :server-port}
+  (GET "/convert" {params :query-params server :server-name port :server-port headers :headers}
     (let [url (params "url")
           original-host (extract-host url)
           base-element (create-base-html original-host)
-          original-page-html (request-url-page url)
+          original-page-html (request-url-page url (headers "user-agent"))
           complico-host (create-host server port)
           script-html (create-script-html original-host complico-host)]
       (str base-element original-page-html script-html)))
