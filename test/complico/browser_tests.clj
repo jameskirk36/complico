@@ -35,14 +35,18 @@
 (defn extract-link-from-page []
   (attribute link-to-page-with-links :href))
 
+(defn perform-search []
+  (-> "input#search"
+    (input-text "search-term-goes-here")
+    submit))
+
 (deftest user-journey-does-it-basically-work
   (to home-page)
   ; this cookie ensures we avoid performing a real search on an external search engine
   (add-cookie {:name "test" :value "test"})
 
-  (-> "input#search"
-    (input-text "search-term-goes-here")
-    submit)
+  (perform-search)
+
   ; need this check because we are hosting page on same server!
   (is (= (extract-link-from-page) expected-link))
   (click link-to-page-with-links)
@@ -55,9 +59,7 @@
   ; this cookie ensures we avoid performing a real search on an external search engine
   (add-cookie {:name "test" :value "test"})
 
-  (-> "input#search"
-    (input-text "search-term-goes-here")
-    submit)
+  (perform-search)
 
   (click ribbon-link)
   (is (= (current-url) home-page)))
