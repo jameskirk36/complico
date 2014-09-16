@@ -28,6 +28,7 @@
 (def link-to-page-with-prices "a#test_page_with_prices")
 (def link-to-page-with-links "a#test_page_with_links")
 (def ribbon-link "a#complico-ribbon-link")
+(def mock-search-results-page-url "http%3A%2F%2Flocalhost%3A3000%2Ftest_page_search_results.html")
 
 (defn extract-price-from [element-name]
   (text (element (str element-name "#price"))))
@@ -40,11 +41,12 @@
     (input-text "search-term-goes-here")
     submit))
 
+(defn ensure-redirect-to-mock-search-results-page []
+  (add-cookie {:name "test" :value mock-search-results-page-url}))
+
 (deftest user-journey-does-it-basically-work
   (to home-page)
-  ; this cookie ensures we avoid performing a real search on an external search engine
-  (add-cookie {:name "test" :value "test"})
-
+  (ensure-redirect-to-mock-search-results-page)
   (perform-search)
 
   ; need this check because we are hosting page on same server!
@@ -56,8 +58,7 @@
 
 (deftest clicking-on-ribbon-goes-back-to-homepage
   (to home-page)
-  ; this cookie ensures we avoid performing a real search on an external search engine
-  (add-cookie {:name "test" :value "test"})
+  (ensure-redirect-to-mock-search-results-page)
 
   (perform-search)
 
