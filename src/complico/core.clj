@@ -28,8 +28,8 @@
         (string/split url #"/"))) "/"))
 
 ; make a http request to url and download the body as string
-(defn request-url-page [url] 
-  (:body (client/get url)))
+(defn request-url-page [url user-agent] 
+  (:body (client/get url {:headers {"user-agent" user-agent}})))
 
 (defn create-grease [host]
   (str host "/convert?url="))
@@ -42,25 +42,32 @@
     {:complico-host complico-host 
      :original-host original-host}))
 
-(defn mock-search-results-page []
-  (str "<body><a id='test_page_with_links' href='http://localhost:3000/test_page_with_links.html'>Test Link</a></body>"
-   (create-script-html "" "http://localhost:3000")))
+(defn get-search-url-from-cookie [cookies]
+  (get (cookies "test") :value))
+
+(defn build-search-url-from-params [params]
+  (str external-search-url (params "search-term")))
+
+(defn get-search-url [cookies params]
+  (if (contains? cookies "test") 
+    (get-search-url-from-cookie cookies)
+    (build-search-url-from-params params)))
 
 (defroutes my-handler
   (GET "/" [] 
     home-page)
 
   (GET "/search" {cookies :cookies params :query-params server :server-name port :server-port}
-    (if (contains? cookies "test") (mock-search-results-page)
-       (let [search-term (params "search-term")
-          grease (create-grease (create-host server port))]
-            (response/redirect (str grease (codec/url-encode (str external-search-url search-term)))))))
+    (let [search-url (get-search-url cookies params)
+          grease (create-grease (create-host server port))
+          redirect-url (str grease (codec/url-encode search-url)) ]
+      (response/redirect redirect-url)))
 
-  (GET "/convert" {params :query-params server :server-name port :server-port}
+  (GET "/convert" {params :query-params server :server-name port :server-port headers :headers}
     (let [url (params "url")
           original-host (extract-host url)
           base-element (create-base-html original-host)
-          original-page-html (request-url-page url)
+          original-page-html (request-url-page url (headers "user-agent"))
           complico-host (create-host server port)
           script-html (create-script-html original-host complico-host)]
       (str base-element original-page-html script-html)))
