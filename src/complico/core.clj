@@ -8,7 +8,8 @@
             [clj-http.client :as client]
             [compojure.route :as route]
             [clojure.string :as string]
-            [selmer.parser :as selmer]))
+            [selmer.parser :as selmer]
+            [hiccup.core :as hiccup]))
 
 ; url of the external search engine to use
 (def external-search-url "http://www.bing.com/search?q=")
@@ -43,8 +44,12 @@
      :original-host original-host}))
 
 (defn create-new-script [original-host complico-host]
-  (str 
-    "<script id='complico_host_vars' original_host_name='" original-host "' complico_host_name='" complico-host "' src='" complico-host "/js/complico-debug.js'></script>"))
+  (hiccup/html
+    [:script 
+      {:id "complico_host_vars"
+       :original_host_name original-host
+       :complico_host_name complico-host
+       :src (str complico-host "/js/complico-debug.js")}]))
 
 (defn get-search-url-from-cookie [cookies]
   (get (cookies "test") :value))

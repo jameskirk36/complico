@@ -8,20 +8,17 @@
   (:use-macros
     [dommy.macros :only [node sel sel1]]))
 
-(defn grease-the-links-new [original-host complico-host]
+(defn replace-the-links! [complico-host original-host]
   (doseq [elem (sel :a)]
-    (let [greased-link (complico/grease-the-link original-host (str complico-host "/convert?url=") (attrs/attr elem :href))]
-      (.log js/console greased-link)
-      (attrs/set-attr! elem :href greased-link))))
+    (let [initial-link (attrs/attr elem :href)
+          grease (str complico-host "/convert?url=")
+          new-link (complico/grease-the-link original-host grease initial-link)]
+      (attrs/set-attr! elem :href new-link))))
 
-(defn extract-original-host []
-  (attrs/attr (sel1 :#complico_host_vars) :original_host_name))
+(defn extract-host-from-dom [host]
+  (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
 
-(defn extract-complico-host []
-  (attrs/attr (sel1 :#complico_host_vars) :complico_host_name))
-
-
-(defn add-ribbon [complico-host]
+(defn add-ribbon-link! [complico-host]
   (dommy/append! (sel1 :body) 
     (node 
       [:a
@@ -31,11 +28,11 @@
           {:style "position: absolute; top: 0; right: 0; border: 0; z-index: 9000;"
            :src (str complico-host "/images/ribbon.png")}]])))
 
-(defn init []
-  (let [original-host (extract-original-host)
-        complico-host (extract-complico-host)]
-    (grease-the-links-new original-host complico-host)
-    (add-ribbon complico-host)))
+(defn adjust-page []
+  (let [original-host (extract-host-from-dom "original_host_name")
+        complico-host (extract-host-from-dom "complico_host_name")]
+    (replace-the-links! complico-host original-host)
+    (add-ribbon-link! complico-host)))
 
-;call init on window.onload
-(set! (.-onload js/window) init)
+;call function on window.onload
+(set! (.-onload js/window) adjust-page)
