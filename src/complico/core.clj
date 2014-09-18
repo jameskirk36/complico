@@ -42,6 +42,10 @@
     {:complico-host complico-host 
      :original-host original-host}))
 
+(defn create-new-script [original-host complico-host]
+  (str 
+    "<script id='complico_host_vars' original_host_name='" original-host "' complico_host_name='" complico-host "' src='" complico-host "/js/complico-debug.js'></script>"))
+
 (defn get-search-url-from-cookie [cookies]
   (get (cookies "test") :value))
 
@@ -69,8 +73,9 @@
           base-element (create-base-html original-host)
           original-page-html (request-url-page url (headers "user-agent"))
           complico-host (create-host server port)
-          script-html (create-script-html original-host complico-host)]
-      (str base-element original-page-html script-html)))
+          script-html (create-script-html original-host complico-host)
+          new-script (create-new-script original-host complico-host)]
+      (str base-element original-page-html new-script script-html )))
   (route/resources "/")
   (route/not-found "Page not found"))
 
