@@ -56,11 +56,11 @@
   (is (= (extract-price-from "div") expected-price))
   (is (= (extract-price-from "span") expected-price)))
 
-;(deftest clicking-on-ribbon-goes-back-to-homepage
-;  (to home-page)
-;  (ensure-redirect-to-mock-search-results-page)
-;
-;  (perform-search)
-;
-;  (click ribbon-link)
-;  (is (= (current-url) home-page)))
+(deftest clicking-on-ribbon-goes-back-to-homepage
+  (to home-page)
+  (ensure-redirect-to-mock-search-results-page)
+
+  (perform-search)
+
+  (click ribbon-link)
+  (is (= (current-url) home-page)))

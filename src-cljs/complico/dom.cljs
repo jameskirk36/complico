@@ -20,11 +20,22 @@
 (defn extract-complico-host []
   (attrs/attr (sel1 :#complico_host_vars) :complico_host_name))
 
+
+(defn add-ribbon [complico-host]
+  (dommy/append! (sel1 :body) 
+    (node 
+      [:a
+        {:id "complico-ribbon-link"
+         :href complico-host}
+        [:img 
+          {:style "position: absolute; top: 0; right: 0; border: 0; z-index: 9000;"
+           :src (str complico-host "/images/ribbon.png")}]])))
+
 (defn init []
-  (.log js/console "Finished loading page")
   (let [original-host (extract-original-host)
         complico-host (extract-complico-host)]
-    (grease-the-links-new original-host complico-host)))
+    (grease-the-links-new original-host complico-host)
+    (add-ribbon complico-host)))
 
 ;call init on window.onload
 (set! (.-onload js/window) init)

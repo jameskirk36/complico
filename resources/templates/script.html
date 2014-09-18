@@ -1,26 +1,12 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
   $(function(){
-//    var greaseLinks = function(){ 
-//      var foundin = $('a').each(function(index){
-//        var link = $(this).attr('href');
-//        if(link !== undefined){
-//          var newLink = complico.core.grease_the_link("{{original-host}}" , "{{complico-host}}/convert?url=", link);
-//          $(this).attr('href', newLink); 
-//        }
-//      });
-//    };
     var replacePrices = function(){
       var found = $('*:not(:has(*)):contains("\u00A3")').each(function(index){
         $(this).text('\u00A3XXX');
       });
     };
-    var addRibbon = function(){
-      $("body").append("<a id='complico-ribbon-link' href='{{complico-host}}'><img style='position: absolute; top: 0; right: 0; border: 0; z-index: 9000;' src='{{complico-host}}/images/ribbon.png'></a>");
-    };
-//    greaseLinks();
     replacePrices();
-//    addRibbon();
    }); 
 </script>
 
