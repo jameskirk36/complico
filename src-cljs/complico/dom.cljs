@@ -18,6 +18,9 @@
 (defn extract-host-from-dom [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
 
+(defn find-elems [elems] 
+  (sel elems))
+
 (defn add-ribbon-link! [complico-host]
   (dommy/append! (sel1 :body) 
     (node 
