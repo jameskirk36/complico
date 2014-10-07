@@ -21,6 +21,9 @@
 (defn find-elems [elems] 
   (sel elems))
 
+(defn replace-text! [elem text]
+  (dommy/set-text! elem text))
+
 (defn add-ribbon-link! [complico-host]
   (dommy/append! (sel1 :body) 
     (node 

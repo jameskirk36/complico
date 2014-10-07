@@ -18,12 +18,26 @@
 (defn confirm-text-was-set-to [actual-text expected-text]
   (assert (= actual-text expected-text)))
 
-(defn setting-text-changes-text-on-elem [] 
+(defn setting-text-on-elem-changes-text [] 
   (-> (select-single-elem)
-      (dommy/set-text! "some text")
+      (replace-text! "modified text")
       (dommy/text)
-      (confirm-text-was-set-to "some text")))
+      (confirm-text-was-set-to "modified text")))
+
+(defn select-single-elem-with-children [] 
+  (sel1 :#parent-elem))
+
+(defn confirm-text-remains [actual-text expected-text]
+  (assert (= actual-text expected-text)))
+
+(defn setting-text-on-elem-does-not-alter-child-elem-text []
+  (-> (select-single-elem-with-children)
+      (replace-text! "modified text")
+      (.-firstChild)
+      (dommy/text)    
+      (confirm-text-remains "original text")))
 
 (defn run []
   (correctly-finds-the-elems)
-  (setting-text-changes-text-on-elem))
+  (setting-text-on-elem-changes-text)
+  (setting-text-on-elem-does-not-alter-child-elem-text))
