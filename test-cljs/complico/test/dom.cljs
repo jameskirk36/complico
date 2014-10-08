@@ -4,37 +4,41 @@
   (:require
    [dommy.utils :as utils]
    [dommy.core :as dommy]
-   [complico.dom :as dom]))
-
-(def body js/document.body)
+   [complico.dom :as complico]))
 
 (defn correctly-finds-the-elems []
-  (let [elems (dom/find-elems "div,span")]
-    (assert (= 4 (count elems)))))
-
-(defn select-single-elem []
-  (sel1 :#parent-elem))
+  (let [root-elem (node
+                [:body
+                  [:div
+                    [:a]
+                    [:div]]
+                  [:p
+                    [:span]]])
+        found-elems (complico/find-elems root-elem "div,span")]
+    (assert (= 3 (count found-elems)))))
 
 (defn confirm-text-was-set-to [actual-text expected-text]
   (assert (= actual-text expected-text)))
 
-(defn setting-text-on-elem-changes-text [] 
-  (-> (select-single-elem)
-      (replace-text! "modified text")
-      (dommy/text)
-      (confirm-text-was-set-to "modified text")))
-
-(defn select-single-elem-with-children [] 
-  (sel1 :#parent-elem))
-
 (defn confirm-text-remains [actual-text expected-text]
   (assert (= actual-text expected-text)))
 
+
+(defn setting-text-on-elem-changes-text [] 
+    (-> (node 
+          [:div#parent "original text"
+            [:div#child "original text"]])
+      (complico/replace-text! "modified text")
+      (complico/get-text-from-node)
+      (confirm-text-was-set-to "modified text")))
+     
 (defn setting-text-on-elem-does-not-alter-child-elem-text []
-  (-> (select-single-elem-with-children)
-      (replace-text! "modified text")
-      (.-firstChild)
-      (dommy/text)    
+    (-> (node 
+          [:div#parent "original text"
+            [:div#child "original text"]])
+      (complico/replace-text! "modified text")
+      (.-lastChild)
+      (complico/get-text-from-node)
       (confirm-text-remains "original text")))
 
 (defn run []
