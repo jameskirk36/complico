@@ -41,7 +41,15 @@
       (complico/get-text-from-node)
       (confirm-text-remains "original text")))
 
+(defn replace-price-case-1 [] 
+  (assert (= (complico/replace-price "£3") "£XXX")))
+
+(defn replace-price-case-2 [] 
+  (assert (= (complico/replace-price "£300") "£XXX")))
+
 (defn run []
   (correctly-finds-the-elems)
   (setting-text-on-elem-changes-text)
-  (setting-text-on-elem-does-not-alter-child-elem-text))
+  (setting-text-on-elem-does-not-alter-child-elem-text)
+  (replace-price-case-1)
+  (replace-price-case-2))
