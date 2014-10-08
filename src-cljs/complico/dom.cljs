@@ -3,10 +3,16 @@
     [dommy.utils :as utils]
     [dommy.core :as dommy]
     [dommy.attrs :as attrs]
+    [goog.dom :as gdom]
     [complico.core :as complico])
 
   (:use-macros
     [dommy.macros :only [node sel sel1]]))
+
+; this is needed to make nodelist iseqable!
+(extend-type js/NodeList
+  ISeqable
+  (-seq [array] (array-seq array 0)))
 
 (defn replace-the-links! [complico-host original-host]
   (doseq [elem (sel :a)]
@@ -21,8 +27,25 @@
 (defn find-elems [elems] 
   (sel elems))
 
+(defn is-text-node [node] 
+  (= (.-nodeType node) 3))
+
+(defn get-child-nodes [n]
+  (.-childNodes n))
+
+(defn get-text-node [n]
+  (first (filter #(is-text-node %) (get-child-nodes n))))
+
+(defn get-text-from-node [n]
+  (.-nodeValue (get-text-node n)))
+
+(defn set-text-on-node [node text]
+  (set! (.-nodeValue node) text))
+
 (defn replace-text! [elem text]
-  (dommy/set-text! elem text))
+  (let [node (get-text-node elem)]
+    (set-text-on-node node text))
+  elem)
 
 (defn add-ribbon-link! [complico-host]
   (dommy/append! (sel1 :body) 
