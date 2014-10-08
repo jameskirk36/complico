@@ -7,8 +7,15 @@
    [complico.dom :as complico]))
 
 (defn correctly-finds-the-elems []
-  (let [elems (complico/find-elems "div,span")]
-    (assert (= 4 (count elems)))))
+  (let [root-elem (node
+                [:body
+                  [:div
+                    [:a]
+                    [:div]]
+                  [:p
+                    [:span]]])
+        found-elems (complico/find-elems root-elem "div,span")]
+    (assert (= 3 (count found-elems)))))
 
 (defn confirm-text-was-set-to [actual-text expected-text]
   (assert (= actual-text expected-text)))

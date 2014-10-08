@@ -24,20 +24,20 @@
 (defn extract-host-from-dom [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
 
-(defn find-elems [elems] 
-  (sel elems))
+(defn find-elems [root-elem selector-string] 
+  (sel root-elem selector-string))
 
 (defn is-text-node [node] 
   (= (.-nodeType node) 3))
 
-(defn get-child-nodes [n]
-  (.-childNodes n))
+(defn get-child-nodes [node]
+  (.-childNodes node))
 
-(defn get-text-node [n]
-  (first (filter #(is-text-node %) (get-child-nodes n))))
+(defn get-text-node [node]
+  (first (filter #(is-text-node %) (get-child-nodes node))))
 
-(defn get-text-from-node [n]
-  (.-nodeValue (get-text-node n)))
+(defn get-text-from-node [node]
+  (.-nodeValue (get-text-node node)))
 
 (defn set-text-on-node [node text]
   (set! (.-nodeValue node) text))
