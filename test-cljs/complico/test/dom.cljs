@@ -55,4 +55,5 @@
   (setting-text-on-elem-changes-text)
   (setting-text-on-elem-does-not-alter-child-elem-text)
   (replace-price-case-1)
-  (replace-price-case-2))
+  (replace-price-case-2)
+  (replace-price-should-not-change-text-without-price))
