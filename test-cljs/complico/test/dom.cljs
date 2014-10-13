@@ -47,6 +47,9 @@
 (defn replace-price-case-2 [] 
   (assert (= (complico/replace-price "£300") "£XXX")))
 
+(defn replace-price-should-not-change-text-without-price [] 
+  (assert (= (complico/replace-price "text without price") "text without price")))
+
 (defn run []
   (correctly-finds-the-elems)
   (setting-text-on-elem-changes-text)
