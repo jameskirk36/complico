@@ -21,17 +21,15 @@
   
   :uberjar-name "complico.jar"
   :plugins  [[lein-ring "0.8.3"]
-             [lein-cljsbuild "1.0.3"]]
+             [lein-cljsbuild "1.0.3"]
+             [com.cemerick/clojurescript.test "0.3.1"]]
   :ring  {:handler complico.core/app}
   :hooks [leiningen.cljsbuild]
   ; clojurescript settings
   :cljsbuild {
-    :test-commands
       ; Test command for running the unit tests in "test-cljs" (see below).
       ;     $ lein cljsbuild test
-      {"unit" ["phantomjs"
-               "phantom/unit-test.js"
-               "resources/private/html/unit-test.html"]}
+    :test-commands {"unit" ["phantomjs" "runners/phantomjs.js" "resources/private/js/unit-test.js"]}
     :builds {
       ; This build has the lowest level of optimizations, so it is
       ; useful when debugging the app.

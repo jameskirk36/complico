@@ -1,12 +1,15 @@
 (ns complico.test.dom
+  (:require-macros [cemerick.cljs.test
+                    :refer (is deftest with-test run-tests testing test-var)])
   (:use-macros
    [dommy.macros :only [sel sel1 node]])
   (:require
    [dommy.utils :as utils]
    [dommy.core :as dommy]
-   [complico.dom :as complico]))
+   [complico.dom :as complico]
+   [cemerick.cljs.test :as t]))
 
-(defn correctly-finds-the-elems []
+(deftest correctly-finds-the-elems 
   (let [root-elem (node
                 [:body
                   [:div
@@ -15,16 +18,16 @@
                   [:p
                     [:span]]])
         found-elems (complico/find-elems root-elem "div,span")]
-    (assert (= 3 (count found-elems)))))
+    (is (= 3 (count found-elems)))))
 
 (defn confirm-text-was-set-to [actual-text expected-text]
-  (assert (= actual-text expected-text)))
+  (is (= actual-text expected-text)))
 
 (defn confirm-text-remains [actual-text expected-text]
-  (assert (= actual-text expected-text)))
+  (is (= actual-text expected-text)))
 
 
-(defn setting-text-on-elem-changes-text [] 
+(deftest setting-text-on-elem-changes-text
     (-> (node 
           [:div#parent "original text"
             [:div#child "original text"]])
@@ -32,7 +35,7 @@
       (complico/get-text-from-node)
       (confirm-text-was-set-to "modified text")))
      
-(defn setting-text-on-elem-does-not-alter-child-elem-text []
+(deftest setting-text-on-elem-does-not-alter-child-elem-text 
     (-> (node 
           [:div#parent "original text"
             [:div#child "original text"]])
@@ -41,15 +44,8 @@
       (complico/get-text-from-node)
       (confirm-text-remains "original text")))
 
-(defn replace-price-case-1 [] 
-  (assert (= (complico/replace-price "£3") "£XXX")))
+(deftest replace-price-case-1 
+  (is (= (complico/replace-price "£3") "£XXX")))
 
-(defn replace-price-case-2 [] 
-  (assert (= (complico/replace-price "£300") "£XXX")))
-
-(defn run []
-  (correctly-finds-the-elems)
-  (setting-text-on-elem-changes-text)
-  (setting-text-on-elem-does-not-alter-child-elem-text)
-  (replace-price-case-1)
-  (replace-price-case-2))
+(deftest replace-price-case-2
+  (is (= (complico/replace-price "£300") "£XXX")))

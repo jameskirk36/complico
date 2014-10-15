@@ -1,4 +1,7 @@
-(ns complico.test.core
+(ns complico.tests.core
+  (:require-macros [cemerick.cljs.test
+                    :refer (is deftest with-test run-tests testing test-var)])
+  (:require [cemerick.cljs.test :as t])
   (:use [complico.core :only [grease-the-link]]))
 
 (def ungreased-full-link "http://someurl.com/page")
@@ -14,9 +17,11 @@
 ; needed to console.log works!
 (enable-console-print!)
 
-(defn run []
-  (assert (= (grease-the-link host grease ungreased-full-link) expected-greased-link))
-  (assert (= (grease-the-link host grease ungreased-relative-link-with-slash) expected-greased-link))
-  (assert (= (grease-the-link host grease ungreased-relative-link-no-slash) expected-greased-link)))
+(deftest grease-the-link-case1
+  (is (= (grease-the-link host grease ungreased-full-link) expected-greased-link)))
 
+(deftest grease-the-link-case2
+  (is (= (grease-the-link host grease ungreased-relative-link-with-slash) expected-greased-link)))
 
+(deftest grease-the-link-case3
+  (is (= (grease-the-link host grease ungreased-relative-link-no-slash) expected-greased-link)))
