@@ -49,3 +49,7 @@
 
 (deftest replace-price-case-2
   (is (= (complico/replace-price "£300") "£XXX")))
+
+(deftest replace-price-should-not-change-text-without-price 
+  (is (= (complico/replace-price "text without price") "text without price")))
+
