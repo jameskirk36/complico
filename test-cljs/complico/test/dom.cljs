@@ -26,24 +26,6 @@
 (defn confirm-text-remains [actual-text expected-text]
   (is (= actual-text expected-text)))
 
-
-(deftest setting-text-on-elem-changes-text
-    (-> (node 
-          [:div#parent "original text"
-            [:div#child "original text"]])
-      (complico/replace-text-on-node! "modified text")
-      (complico/get-text-from-node)
-      (confirm-text-was-set-to "modified text")))
-     
-(deftest setting-text-on-elem-does-not-alter-child-elem-text 
-    (-> (node 
-          [:div#parent "original text"
-            [:div#child "original text"]])
-      (complico/replace-text-on-node! "modified text")
-      (.-lastChild)
-      (complico/get-text-from-node)
-      (confirm-text-remains "original text")))
-
 (deftest convert-price-case-1 
   (is (= (complico/convert-price-in-text "£3") "£XXX")))
 
@@ -53,11 +35,11 @@
 (deftest convert-price-should-not-change-text-without-price 
   (is (= (complico/convert-price-in-text "text without price") "text without price")))
 
-(deftest replace-price-in-dom 
+(deftest replace-price-in-dom-should-correctly-replace-price
   (let [root-elem (node 
           [:body
             [:div
-              [:div#price "£300"]]])]
+              [:div "£300"]]])]
     (complico/replace-prices-in-dom! root-elem)
     (-> root-elem
         (.-lastChild)
@@ -65,3 +47,14 @@
         (complico/get-text-from-node)
         (confirm-text-was-set-to "£XXX"))))
 
+(deftest replace-price-in-dom-should-leave-text-not-containing-prices-untouched
+  (let [root-elem (node 
+          [:body
+            [:div "£300"
+              [:div "donttouchme"]]])]
+    (complico/replace-prices-in-dom! root-elem)
+    (-> root-elem
+        (.-lastChild)
+        (.-lastChild)
+        (complico/get-text-from-node)
+        (confirm-text-remains "donttouchme"))))
