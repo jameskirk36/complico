@@ -31,7 +31,7 @@
     (-> (node 
           [:div#parent "original text"
             [:div#child "original text"]])
-      (complico/replace-text! "modified text")
+      (complico/replace-text-on-node! "modified text")
       (complico/get-text-from-node)
       (confirm-text-was-set-to "modified text")))
      
@@ -39,17 +39,29 @@
     (-> (node 
           [:div#parent "original text"
             [:div#child "original text"]])
-      (complico/replace-text! "modified text")
+      (complico/replace-text-on-node! "modified text")
       (.-lastChild)
       (complico/get-text-from-node)
       (confirm-text-remains "original text")))
 
-(deftest replace-price-case-1 
-  (is (= (complico/replace-price "£3") "£XXX")))
+(deftest convert-price-case-1 
+  (is (= (complico/convert-price-in-text "£3") "£XXX")))
 
-(deftest replace-price-case-2
-  (is (= (complico/replace-price "£300") "£XXX")))
+(deftest convert-price-case-2
+  (is (= (complico/convert-price-in-text "£300") "£XXX")))
 
-(deftest replace-price-should-not-change-text-without-price 
-  (is (= (complico/replace-price "text without price") "text without price")))
+(deftest convert-price-should-not-change-text-without-price 
+  (is (= (complico/convert-price-in-text "text without price") "text without price")))
+
+(deftest replace-price-in-dom 
+  (let [root-elem (node 
+          [:body
+            [:div
+              [:div#price "£300"]]])]
+    (complico/replace-prices-in-dom! root-elem)
+    (-> root-elem
+        (.-lastChild)
+        (.-lastChild)
+        (complico/get-text-from-node)
+        (confirm-text-was-set-to "£XXX"))))
 
