@@ -9,7 +9,8 @@
    [complico.dom :as complico]
    [cemerick.cljs.test :as t]))
 
-(deftest correctly-finds-the-elems 
+
+(deftest correctly-finds-multiple-elems
   (let [root-elem (node
                 [:body
                   [:div
@@ -17,8 +18,23 @@
                     [:div]]
                   [:p
                     [:span]]])
-        found-elems (complico/find-elems root-elem "div,span")]
+        found-elems (complico/find-elems root-elem)]
     (is (= 3 (count found-elems)))))
+
+(deftest correctly-finds-elem-div
+  (let [root-elem (node [:body [:div]])
+       found-elems (complico/find-elems root-elem)]
+    (is (= 1 (count found-elems)))))
+
+(deftest correctly-finds-elem-span
+  (let [root-elem (node [:body [:span]])
+       found-elems (complico/find-elems root-elem)]
+    (is (= 1 (count found-elems)))))
+
+(deftest correctly-finds-elem-li
+  (let [root-elem (node [:body [:li]])
+       found-elems (complico/find-elems root-elem)]
+    (is (= 1 (count found-elems)))))
 
 (defn confirm-text-was-set-to [actual-text expected-text]
   (is (= actual-text expected-text)))

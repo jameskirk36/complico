@@ -14,7 +14,7 @@
   ISeqable
   (-seq [array] (array-seq array 0)))
 
-(def price-elem-selector "div,span")
+(def price-elem-selector "div,span,li")
 
 (defn replace-the-links! [complico-host original-host]
   (doseq [elem (sel :a)]
@@ -27,8 +27,8 @@
 (defn extract-host-from-dom [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
 
-(defn find-elems [root-elem selector-string] 
-  (sel root-elem selector-string))
+(defn find-elems [root-elem] 
+  (sel root-elem price-elem-selector))
 
 (defn is-text-node [node] 
   (= (.-nodeType node) 3))
@@ -82,7 +82,7 @@
         (replace-text-on-node! elem)))))
 
 (defn replace-prices-in-dom! [root-node]
-  (let [elems (find-elems root-node price-elem-selector)]
+  (let [elems (find-elems root-node)]
     (doall (map replace-price-on-elem! elems))))
 
 (defn add-ribbon-link! [complico-host]
