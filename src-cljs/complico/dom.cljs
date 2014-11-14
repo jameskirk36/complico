@@ -4,7 +4,8 @@
     [dommy.core :as dommy]
     [dommy.attrs :as attrs]
     [goog.dom :as gdom]
-    [complico.core :as complico])
+    [complico.core :as complico]
+    [complico.dom-helper :as dom-helper])
 
   (:use-macros
     [dommy.macros :only [node sel sel1]]))
@@ -30,29 +31,6 @@
 (defn find-elems [root-elem] 
   (sel root-elem price-elem-selector))
 
-(defn is-text-node [node] 
-  (= (.-nodeType node) 3))
-
-(defn get-child-nodes [node]
-  (.-childNodes node))
-
-(defn get-text-node [node]
-  (first (filter #(is-text-node %) (get-child-nodes node))))
-
-(defn get-text-from-node [node]
-  (let [text-node (get-text-node node)]
-    (if (= text-node nil)
-      nil
-      (.-nodeValue text-node))))
-
-(defn set-text-on-node [node text]
-  (set! (.-nodeValue node) text))
-
-(defn replace-text-on-node! [elem text]
-  (let [node (get-text-node elem)]
-    (set-text-on-node node text))
-  elem)
-
 (defn find-prices [text]
   (re-seq #"£(\d+)" text))
 
@@ -75,11 +53,11 @@
       replacement-prices))) 
 
 (defn replace-price-on-elem! [elem]
-  (let [text (get-text-from-node elem)]
+  (let [text (dom-helper/get-text-from-node elem)]
     (if-not (= text nil) 
       (->> text
         (convert-price-in-text)
-        (replace-text-on-node! elem)))))
+        (dom-helper/replace-text-on-node! elem)))))
 
 (defn replace-prices-in-dom! [root-node]
   (let [elems (find-elems root-node)]

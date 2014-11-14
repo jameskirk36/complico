@@ -7,6 +7,7 @@
    [dommy.utils :as utils]
    [dommy.core :as dommy]
    [complico.dom :as complico]
+   [complico.dom-helper :as dom-helper]
    [cemerick.cljs.test :as t]))
 
 
@@ -60,7 +61,7 @@
     (-> root-elem
         (.-lastChild)
         (.-lastChild)
-        (complico/get-text-from-node)
+        (dom-helper/get-text-from-node)
         (confirm-text-was-set-to "£XXX"))))
 
 (deftest replace-price-in-dom-should-leave-text-not-containing-prices-untouched
@@ -72,5 +73,5 @@
     (-> root-elem
         (.-lastChild)
         (.-lastChild)
-        (complico/get-text-from-node)
+        (dom-helper/get-text-from-node)
         (confirm-text-remains "donttouchme"))))
