@@ -18,10 +18,11 @@
 
 (defn replace-the-links! [complico-host original-host]
   (doseq [elem (sel :a)]
-    (let [initial-link (attrs/attr elem :href)
-          grease (str complico-host "/convert?url=")
-          new-link (complico/grease-the-link original-host grease initial-link)]
-      (attrs/set-attr! elem :href new-link))))
+    (let [initial-link (attrs/attr elem :href)]
+       (if (not (nil? initial-link))
+          (let [grease (str complico-host "/convert?url=")
+                new-link (complico/grease-the-link original-host grease initial-link)]
+               (attrs/set-attr! elem :href new-link))))))
 
 (defn extract-host-from-dom [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
@@ -98,7 +99,8 @@
   (let [original-host (extract-host-from-dom "original_host_name")
         complico-host (extract-host-from-dom "complico_host_name")]
     (replace-the-links! complico-host original-host)
-    (add-ribbon-link! complico-host)))
+    (add-ribbon-link! complico-host)
+    (replace-prices-in-dom! (sel1 :body))))
 
 ;call function on window.onload
 (set! (.-onload js/window) adjust-page)

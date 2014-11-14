@@ -78,9 +78,8 @@
           base-element (create-base-html original-host)
           original-page-html (request-url-page url (headers "user-agent"))
           complico-host (create-host server port)
-          script-html (create-script-html original-host complico-host)
-          new-script (create-new-script original-host complico-host)]
-      (str base-element original-page-html new-script script-html )))
+          script-include-cljs (create-new-script original-host complico-host)]
+      (str base-element original-page-html script-include-cljs )))
   (route/resources "/")
   (route/not-found "Page not found"))
 
