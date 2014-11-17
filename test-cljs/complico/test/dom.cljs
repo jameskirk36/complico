@@ -6,7 +6,7 @@
   (:require
    [dommy.utils :as utils]
    [dommy.core :as dommy]
-   [complico.dom :as complico]
+   [complico.dom :as dom]
    [complico.dom-helper :as dom-helper]
    [cemerick.cljs.test :as t]))
 
@@ -17,27 +17,27 @@
                   [:div
                     [:a]
                     [:span]]])
-        found-elems (complico/find-elems root-elem)]
+        found-elems (dom/find-elems root-elem)]
     (is (= 2 (count found-elems)))))
 
 (deftest correctly-finds-elem-div
   (let [root-elem (node [:body [:div]])
-       found-elems (complico/find-elems root-elem)]
+       found-elems (dom/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
 (deftest correctly-finds-elem-span
   (let [root-elem (node [:body [:span]])
-       found-elems (complico/find-elems root-elem)]
+       found-elems (dom/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
 (deftest correctly-finds-elem-li
   (let [root-elem (node [:body [:li]])
-       found-elems (complico/find-elems root-elem)]
+       found-elems (dom/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
 (deftest correctly-finds-elem-p
   (let [root-elem (node [:body [:p]])
-       found-elems (complico/find-elems root-elem)]
+       found-elems (dom/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
 (defn confirm-text-was-set-to [actual-text expected-text]
@@ -46,21 +46,12 @@
 (defn confirm-text-remains [actual-text expected-text]
   (is (= actual-text expected-text)))
 
-(deftest convert-price-case-1 
-  (is (= (complico/convert-price-in-text "£3") "£XXX")))
-
-(deftest convert-price-case-2
-  (is (= (complico/convert-price-in-text "£300") "£XXX")))
-
-(deftest convert-price-should-not-change-text-without-price 
-  (is (= (complico/convert-price-in-text "text without price") "text without price")))
-
 (deftest replace-price-in-dom-should-correctly-replace-price
   (let [root-elem (node 
           [:body
             [:div
               [:div "£300"]]])]
-    (complico/replace-prices-in-dom! root-elem)
+    (dom/replace-prices-in-dom! root-elem)
     (-> root-elem
         (.-lastChild)
         (.-lastChild)
@@ -72,7 +63,7 @@
           [:body
             [:div "£300"
               [:div "donttouchme"]]])]
-    (complico/replace-prices-in-dom! root-elem)
+    (dom/replace-prices-in-dom! root-elem)
     (-> root-elem
         (.-lastChild)
         (.-lastChild)
