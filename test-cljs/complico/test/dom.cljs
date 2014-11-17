@@ -16,11 +16,9 @@
                 [:body
                   [:div
                     [:a]
-                    [:div]]
-                  [:p
                     [:span]]])
         found-elems (complico/find-elems root-elem)]
-    (is (= 3 (count found-elems)))))
+    (is (= 2 (count found-elems)))))
 
 (deftest correctly-finds-elem-div
   (let [root-elem (node [:body [:div]])
@@ -34,6 +32,11 @@
 
 (deftest correctly-finds-elem-li
   (let [root-elem (node [:body [:li]])
+       found-elems (complico/find-elems root-elem)]
+    (is (= 1 (count found-elems)))))
+
+(deftest correctly-finds-elem-p
+  (let [root-elem (node [:body [:p]])
        found-elems (complico/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
