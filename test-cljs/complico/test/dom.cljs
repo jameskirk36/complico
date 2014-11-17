@@ -15,7 +15,7 @@
   (let [root-elem (node
                 [:body
                   [:div
-                    [:a]
+                    [:ol]
                     [:span]]])
         found-elems (dom/find-elems root-elem)]
     (is (= 2 (count found-elems)))))
@@ -32,6 +32,11 @@
 
 (deftest correctly-finds-elem-li
   (let [root-elem (node [:body [:li]])
+       found-elems (dom/find-elems root-elem)]
+    (is (= 1 (count found-elems)))))
+
+(deftest correctly-finds-elem-a
+  (let [root-elem (node [:body [:a]])
        found-elems (dom/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 

@@ -15,7 +15,7 @@
   ISeqable
   (-seq [array] (array-seq array 0)))
 
-(def price-elem-selector "div,span,li,p")
+(def price-elem-selector "div,span,li,p,a")
 
 (defn replace-the-links! [complico-host original-host]
   (doseq [elem (sel :a)]
