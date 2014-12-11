@@ -44,6 +44,9 @@
 (defn ensure-redirect-to-mock-search-results-page []
   (add-cookie {:name "test" :value mock-search-results-page-url}))
 
+(defn existing-form-hidden? [] 
+  (not (displayed? "form")))
+
 (deftest user-journey-does-it-basically-work
   (to home-page)
   (ensure-redirect-to-mock-search-results-page)
@@ -51,6 +54,7 @@
 
   ; need this check because we are hosting page on same server!
   (is (= (extract-link-from-page) expected-link))
+  (is (existing-form-hidden?))
   (click link-to-page-with-links)
   (click link-to-page-with-prices)
   (is (= (extract-price-from "div") expected-price))

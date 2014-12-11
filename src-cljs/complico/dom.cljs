@@ -53,9 +53,14 @@
           {:style "position: absolute; top: 0; right: 0; border: 0; z-index: 9000;"
            :src (str complico-host "/images/ribbon.png")}]])))
 
+(defn hide-existing-form-element! [root-node]
+  (if-let [form (sel1 root-node :form)]
+    (attrs/set-attr! form :style "display: none;")))
+
 (defn adjust-page []
   (let [original-host (extract-host-from-dom "original_host_name")
         complico-host (extract-host-from-dom "complico_host_name")]
+    (hide-existing-form-element! (sel1 :body)) 
     (replace-the-links! complico-host original-host)
     (add-ribbon-link! complico-host)
     (replace-prices-in-dom! (sel1 :body))))

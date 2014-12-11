@@ -74,3 +74,11 @@
         (.-lastChild)
         (dom-helper/get-text-from-node)
         (confirm-text-remains "donttouchme"))))
+
+(deftest should-hide-existing-form-element
+  (let [root-elem (node [:body [:form]])]
+    (dom/hide-existing-form-element! root-elem)
+    (-> (sel1 root-elem :form)
+      (dommy/attr "style")
+      (confirm-text-was-set-to "display: none;"))))
+      
