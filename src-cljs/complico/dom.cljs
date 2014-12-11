@@ -5,6 +5,7 @@
     [dommy.attrs :as attrs]
     [goog.dom :as gdom]
     [complico.core :as complico]
+    [complico.links :as links]
     [complico.dom-helper :as dom-helper])
 
   (:use-macros
@@ -16,13 +17,6 @@
   (-seq [array] (array-seq array 0)))
 
 (def price-elem-selector "div,span,li,p,a")
-
-(defn replace-the-links! [complico-host original-host]
-  (doseq [elem (sel :a)]
-    (if-let [initial-link (attrs/attr elem :href)]
-        (let [grease (str complico-host "/convert?url=")
-              new-link (complico/grease-the-link original-host grease initial-link)]
-             (attrs/set-attr! elem :href new-link)))))
 
 (defn extract-host-from-dom [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
@@ -59,7 +53,7 @@
   (let [original-host (extract-host-from-dom "original_host_name")
         complico-host (extract-host-from-dom "complico_host_name")]
     (hide-existing-form-element! (sel1 :body)) 
-    (replace-the-links! complico-host original-host)
+    (links/replace-the-links! complico-host original-host)
     (add-ribbon-link! complico-host)
     (replace-prices-in-dom! (sel1 :body))))
 
