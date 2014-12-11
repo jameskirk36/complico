@@ -19,11 +19,10 @@
 
 (defn replace-the-links! [complico-host original-host]
   (doseq [elem (sel :a)]
-    (let [initial-link (attrs/attr elem :href)]
-       (if (not (nil? initial-link))
-          (let [grease (str complico-host "/convert?url=")
-                new-link (complico/grease-the-link original-host grease initial-link)]
-               (attrs/set-attr! elem :href new-link))))))
+    (if-let [initial-link (attrs/attr elem :href)]
+        (let [grease (str complico-host "/convert?url=")
+              new-link (complico/grease-the-link original-host grease initial-link)]
+             (attrs/set-attr! elem :href new-link)))))
 
 (defn extract-host-from-dom [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
@@ -33,11 +32,10 @@
 
 
 (defn replace-price-on-elem! [elem]
-  (let [text (dom-helper/get-text-from-node elem)]
-    (if-not (= text nil) 
-      (->> text
-        (complico/convert-price-in-text)
-        (dom-helper/replace-text-on-node! elem)))))
+  (if-let [text (dom-helper/get-text-from-node elem)]
+    (->> text
+      (complico/convert-price-in-text)
+      (dom-helper/replace-text-on-node! elem))))
 
 (defn replace-prices-in-dom! [root-node]
   (let [elems (find-elems root-node)]
