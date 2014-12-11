@@ -4,7 +4,7 @@
     [dommy.core :as dommy]
     [dommy.attrs :as attrs]
     [goog.dom :as gdom]
-    [complico.core :as complico]
+    [complico.prices :as prices]
     [complico.links :as links]
     [complico.dom-helper :as dom-helper])
 
@@ -16,24 +16,8 @@
   ISeqable
   (-seq [array] (array-seq array 0)))
 
-(def price-elem-selector "div,span,li,p,a")
-
 (defn extract-host-from-dom [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
-
-(defn find-elems [root-elem] 
-  (sel root-elem price-elem-selector))
-
-
-(defn replace-price-on-elem! [elem]
-  (if-let [text (dom-helper/get-text-from-node elem)]
-    (->> text
-      (complico/convert-price-in-text)
-      (dom-helper/replace-text-on-node! elem))))
-
-(defn replace-prices-in-dom! [root-node]
-  (let [elems (find-elems root-node)]
-    (doall (map replace-price-on-elem! elems))))
 
 (defn add-ribbon-link! [complico-host]
   (dommy/append! (sel1 :body) 
@@ -55,7 +39,7 @@
     (hide-existing-form-element! (sel1 :body)) 
     (links/replace-the-links! complico-host original-host)
     (add-ribbon-link! complico-host)
-    (replace-prices-in-dom! (sel1 :body))))
+    (prices/replace-prices-in-dom! (sel1 :body))))
 
 ;call function on window.onload
 (set! (.-onload js/window) adjust-page)
