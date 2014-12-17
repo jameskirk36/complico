@@ -37,7 +37,7 @@
   (attribute link-to-page-with-links :href))
 
 (defn perform-search []
-  (-> "input#search"
+  (-> "input#search_form_input_homepage"
     (input-text "search-term-goes-here")
     submit))
 
