@@ -12,7 +12,7 @@
             [hiccup.core :as hiccup]))
 
 ; url of the external search engine to use
-(def external-search-url "http://uk.search.yahoo.com/search?p=")
+(def external-search-url "https://duckduckgo.com/?q=")
 
 (def home-page 
   (selmer/render-file "templates/index.html" {}))
