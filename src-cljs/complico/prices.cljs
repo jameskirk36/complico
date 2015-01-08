@@ -9,6 +9,10 @@
 
 (def price-elem-selector "div,span,li,p,a")
 
+(defn divide-by-two [price] 
+  (let [num (js/parseInt price)]
+    (str (* num 2) " / 2")))
+
 (defn find-prices [text]
   (re-seq #"£(\d+)" text))
 

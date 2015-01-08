@@ -85,3 +85,6 @@
         (.-lastChild)
         (dom-helper/get-text-from-node)
         (confirm-text-remains "donttouchme"))))
+
+(deftest convert-price-divide-by-two
+  (is (= (prices/divide-by-two "800") "1600 / 2")))
