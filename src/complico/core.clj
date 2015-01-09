@@ -36,7 +36,10 @@
   (str host "/convert?url="))
 
 (defn create-host [server port]
-  (str "//" server ":" port))
+  (if (= server "localhost") 
+    (str "//" server ":" port)
+  (str "//" server)))
+
 
 (defn create-script-html [original-host complico-host]
   (selmer/render-file "templates/script.html"
