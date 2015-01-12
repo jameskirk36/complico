@@ -37,8 +37,8 @@
 
 (defn create-host [server port]
   (if (= server "localhost") 
-    (str "//" server ":" port)
-  (str "//" server)))
+    (str "http://" server ":" port)
+  (str "http://" server)))
 
 
 (defn create-script-html [original-host complico-host]
