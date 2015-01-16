@@ -13,13 +13,13 @@
 ; needed to console.log works!
 (enable-console-print!)
 
-(deftest convert-price-case-1 
+(deftest convert-price-case-pounds
   (is (= (prices/convert-price-in-text "£3") "£XXX")))
 
-(deftest convert-price-case-2
+(deftest convert-price-case-pounds-multiple
   (is (= (prices/convert-price-in-text "£300") "£XXX")))
 
-(deftest convert-price-case-3
+(deftest convert-price-case-pounts-and-pence
   (is (= (prices/convert-price-in-text "£300.00") "£XXX")))
 
 (deftest convert-price-should-not-change-text-without-price 
