@@ -19,6 +19,9 @@
 (deftest convert-price-case-2
   (is (= (prices/convert-price-in-text "£300") "£XXX")))
 
+(deftest convert-price-case-3
+  (is (= (prices/convert-price-in-text "£300.00") "£XXX")))
+
 (deftest convert-price-should-not-change-text-without-price 
   (is (= (prices/convert-price-in-text "text without price") "text without price")))
 
