@@ -14,7 +14,7 @@
     (str (* num 2) " / 2")))
 
 (defn find-prices [text]
-  (re-seq #"£(\d+\.?\d*)" text))
+  (re-seq #"£(.*)$" text))
 
 (defn convert-price [price]
   "£XXX")
