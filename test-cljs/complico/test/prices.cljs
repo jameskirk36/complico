@@ -90,4 +90,4 @@
         (confirm-text-remains "donttouchme"))))
 
 (deftest convert-price-divide-by-two
-  (is (= (prices/divide-by-two "800") "1600 / 2")))
+  (is (= (prices/divide-by-two "9.99") "19.98 / 2")))

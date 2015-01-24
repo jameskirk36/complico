@@ -2,16 +2,21 @@
   (:require 
     [dommy.utils :as utils]
     [dommy.core :as dommy]
-    [complico.dom-helper :as dom-helper])
-
+    [complico.dom-helper :as dom-helper]
+    [goog.string :as gstring]
+    [goog.string.format])
   (:use-macros
     [dommy.macros :only [node sel sel1]]))
 
 (def price-elem-selector "div,span,li,p,a")
 
 (defn divide-by-two [price] 
-  (let [num (js/parseInt price)]
-    (str (* num 2) " / 2")))
+  (str 
+    (->> price
+      (js/parseFloat)
+      (* 2.0)
+      (gstring/format "%.2f"))
+    " / 2"))
 
 (defn find-prices [text]
   (re-seq #"£(.*)$" text))
