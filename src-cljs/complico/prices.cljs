@@ -10,13 +10,15 @@
 
 (def price-elem-selector "div,span,li,p,a")
 
+(defn apply-price-formatting [price]
+  (gstring/format "%.2f" price))
+
 (defn divide-by-two [price] 
-  (str 
-    (->> price
-      (js/parseFloat)
-      (* 2.0)
-      (gstring/format "%.2f"))
-    " / 2"))
+  (-> price
+    (js/parseFloat)
+    (* 2.0)
+    (apply-price-formatting)
+    (str " / 2")))
 
 (defn find-prices [text]
   (re-seq #"£(.*)$" text))
