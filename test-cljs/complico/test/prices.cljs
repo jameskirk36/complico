@@ -13,14 +13,14 @@
 ; needed to console.log works!
 (enable-console-print!)
 
-(deftest convert-price-case-pounds
-  (is (= (prices/convert-price-in-text "£3") "£XXX")))
+(deftest find-prices-case-pounds 
+  (is (= (last (first (prices/find-prices "£3"))) "3")))
 
-(deftest convert-price-case-pounds-multiple
-  (is (= (prices/convert-price-in-text "£300") "£XXX")))
+(deftest find-prices-case-pounds-multiple
+  (is (= (last (first (prices/find-prices "£300"))) "300")))
 
-(deftest convert-price-case-pounts-and-pence
-  (is (= (prices/convert-price-in-text "£300.00") "£XXX")))
+(deftest find-prices-case-pounds-and-pence
+  (is (= (last (first (prices/find-prices "£300.00"))) "300.00")))
 
 (deftest convert-price-should-not-change-text-without-price 
   (is (= (prices/convert-price-in-text "text without price") "text without price")))
@@ -69,7 +69,7 @@
   (let [root-elem (node 
           [:body
             [:div
-              [:div "£300"]]])]
+              [:div "£0"]]])]
     (prices/replace-prices-in-dom! root-elem)
     (-> root-elem
         (.-lastChild)
@@ -80,7 +80,7 @@
 (deftest replace-price-in-dom-should-leave-text-not-containing-prices-untouched
   (let [root-elem (node 
           [:body
-            [:div "£300"
+            [:div "£0"
               [:div "donttouchme"]]])]
     (prices/replace-prices-in-dom! root-elem)
     (-> root-elem
