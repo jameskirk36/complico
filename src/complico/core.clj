@@ -40,12 +40,6 @@
     (str "http://" server ":" port)
   (str "http://" server)))
 
-
-(defn create-script-html [original-host complico-host]
-  (selmer/render-file "templates/script.html"
-    {:complico-host complico-host 
-     :original-host original-host}))
-
 (defn create-new-script [original-host complico-host]
   (hiccup/html
     [:script 
