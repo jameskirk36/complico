@@ -24,7 +24,7 @@
   (re-seq #"£(.*)$" text))
 
 (defn convert-price-test [price]
-  "£XXX")
+  "XXX")
 
 (defn is-test-price [price]
   (= price "0"))
@@ -32,13 +32,13 @@
 (defn convert-price [price]
   (if (is-test-price price) 
     (convert-price-test price)
-    "TODO"))
+    (divide-by-two price)))
 
 (defn convert-prices [prices]
   (map
     #(vector
       (first %)
-      (convert-price (last %)))
+      (str "£" (convert-price (last %))))
     prices))
 
 (defn find-elems [root-elem]
