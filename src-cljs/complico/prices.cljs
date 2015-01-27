@@ -23,8 +23,16 @@
 (defn find-prices [text]
   (re-seq #"£(.*)$" text))
 
-(defn convert-price [price]
+(defn convert-price-test [price]
   "£XXX")
+
+(defn is-test-price [price]
+  (= price "0"))
+
+(defn convert-price [price]
+  (if (is-test-price price) 
+    (convert-price-test price)
+    "TODO"))
 
 (defn convert-prices [prices]
   (map
