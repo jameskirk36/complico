@@ -12,7 +12,7 @@
             [hiccup.core :as hiccup]))
 
 ; url of the external search engine to use
-(def external-search-url "https://duckduckgo.com/?iac=1&q=")
+(def external-search-url "https://www.google.co.uk/search?btnI=1&q=")
 
 (def home-page 
   (selmer/render-file "templates/index.html" {}))
@@ -54,10 +54,16 @@
 (defn build-search-url-from-params [params]
   (str external-search-url (params "search-term")))
 
+(defn get-redirected-location [url]
+  (-> url
+    (client/head)
+    (:trace-redirects)
+    (last)))
+
 (defn get-search-url [cookies params]
   (if (contains? cookies "test") 
     (get-search-url-from-cookie cookies)
-    (build-search-url-from-params params)))
+    (get-redirected-location (build-search-url-from-params params))))
 
 (defroutes my-handler
   (GET "/" [] 
