@@ -44,19 +44,23 @@
 (defn find-elems [root-elem]
   (sel root-elem price-elem-selector))
 
-(defn convert-price-in-text [text]
-  (let [prices (find-prices text)
-        replacement-prices (convert-prices prices)]
-    (reduce 
-      #(apply clojure.string/replace %1 %2)
-      text
-      replacement-prices))) 
+(defn build-new-price-text [text replacement-prices]
+  (reduce 
+    #(apply clojure.string/replace %1 %2)
+    text
+    replacement-prices))
+
+(defn convert-price-in-text [prices original-text]
+  (->> prices 
+    (convert-prices)
+    (build-new-price-text original-text)))
 
 (defn replace-price-on-elem! [elem]
   (if-let [text (dom-helper/get-text-from-node elem)]
-    (->> text
-      (convert-price-in-text)
-      (dom-helper/replace-text-on-node! elem))))
+    (if-let [prices (find-prices text)]
+      (->> text
+          (convert-price-in-text prices)
+          (dommy/set-html! elem)))))
 
 (defn replace-prices-in-dom! [root-node]
   (let [elems (find-elems root-node)]

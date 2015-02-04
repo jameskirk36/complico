@@ -22,9 +22,6 @@
 (deftest find-prices-case-pounds-and-pence
   (is (= (last (first (prices/find-prices "£300.00"))) "300.00")))
 
-(deftest convert-price-should-not-change-text-without-price 
-  (is (= (prices/convert-price-in-text "text without price") "text without price")))
-
 (deftest convert-price-should-use-real-conversion-for-non-zero-real-prices
   (is (= (prices/convert-price "1") "2.00 / 2")))  
 
@@ -80,17 +77,17 @@
         (dom-helper/get-text-from-node)
         (confirm-text-was-set-to "£XXX"))))
 
-(deftest replace-price-in-dom-should-leave-text-not-containing-prices-untouched
+(deftest replace-price-in-dom-should-not-overwrite-html-on-empty-text-nodes
   (let [root-elem (node 
           [:body
-            [:div "£0"
-              [:div "donttouchme"]]])]
+            [:div "   "
+              [:div "£0"]]])]
     (prices/replace-prices-in-dom! root-elem)
     (-> root-elem
         (.-lastChild)
         (.-lastChild)
         (dom-helper/get-text-from-node)
-        (confirm-text-remains "donttouchme"))))
+        (confirm-text-was-set-to "£XXX"))))
 
 (deftest convert-price-divide-by-two
   (is (= (prices/divide-by-two "9.99") "19.98 / 2")))
