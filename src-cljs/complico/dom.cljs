@@ -16,10 +16,10 @@
   ISeqable
   (-seq [array] (array-seq array 0)))
 
-(defn extract-host-from-dom [host]
+(defn- extract-host-from-dom [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
 
-(defn add-ribbon-link! [complico-host]
+(defn- add-ribbon-link! [complico-host]
   (dommy/append! (sel1 :body) 
     (node 
       [:a

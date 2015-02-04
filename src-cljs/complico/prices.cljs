@@ -8,12 +8,12 @@
   (:use-macros
     [dommy.macros :only [node sel sel1]]))
 
-(def price-elem-selector "div,span,li,p,a")
+(def ^:private price-elem-selector "div,span,li,p,a")
 
-(defn apply-price-formatting [price]
+(defn- apply-price-formatting [price]
   (gstring/format "%.2f" price))
 
-(defn divide-by-two [price] 
+(defn- divide-by-two [price] 
   (-> price
     (js/parseFloat)
     (* 2.0)
@@ -23,10 +23,10 @@
 (defn find-prices [text]
   (re-seq #"£(.*)$" text))
 
-(defn convert-price-test [price]
+(defn- convert-price-test [price]
   "XXX")
 
-(defn is-test-price [price]
+(defn- is-test-price [price]
   (= price "0"))
 
 (defn convert-price [price]
@@ -34,7 +34,7 @@
     (convert-price-test price)
     (divide-by-two price)))
 
-(defn convert-prices [prices]
+(defn- convert-prices [prices]
   (map
     #(vector
       (first %)
@@ -44,18 +44,18 @@
 (defn find-elems [root-elem]
   (sel root-elem price-elem-selector))
 
-(defn build-new-price-text [text replacement-prices]
+(defn- build-new-price-text [text replacement-prices]
   (reduce 
     #(apply clojure.string/replace %1 %2)
     text
     replacement-prices))
 
-(defn convert-price-in-text [prices original-text]
+(defn- convert-price-in-text [prices original-text]
   (->> prices 
     (convert-prices)
     (build-new-price-text original-text)))
 
-(defn replace-price-on-elem! [elem]
+(defn- replace-price-on-elem! [elem]
   (if-let [text (dom-helper/get-text-from-node elem)]
     (if-let [prices (find-prices text)]
       (->> text
