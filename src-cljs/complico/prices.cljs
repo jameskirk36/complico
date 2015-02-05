@@ -13,32 +13,32 @@
 (defn- apply-price-formatting [price]
   (gstring/format "%.2f" price))
 
-(defn- divide-by-two [price] 
-  (-> price
-    (js/parseFloat)
-    (* 2.0)
-    (apply-price-formatting)
-    (str " / 2")))
+(defn- divide-by-two [currency price] 
+  (let [new-price (-> price
+                    (js/parseFloat)
+                    (* 2.0)
+                    (apply-price-formatting))]
+    (str currency new-price " / " currency "2.00")))
 
 (defn find-prices [text]
-  (re-seq #"£(.*)$" text))
+  (re-seq #"(£)(.*)$" text))
 
-(defn- convert-price-test [price]
-  "XXX")
+(defn- convert-price-test [currency price]
+  (str currency "XXX"))
 
 (defn- is-test-price [price]
   (= price "0"))
 
-(defn convert-price [price]
+(defn convert-price [currency price]
   (if (is-test-price price) 
-    (convert-price-test price)
-    (divide-by-two price)))
+    (convert-price-test currency price)
+    (divide-by-two currency price)))
 
 (defn- convert-prices [prices]
   (map
     #(vector
       (first %)
-      (str "£" (convert-price (last %))))
+      (convert-price (second %) (last %)))
     prices))
 
 (defn find-elems [root-elem]

@@ -23,7 +23,7 @@
   (is (= (last (first (prices/find-prices "£300.00"))) "300.00")))
 
 (deftest convert-price-should-use-real-conversion-for-non-zero-real-prices
-  (is (= (prices/convert-price "1") "2.00 / 2")))  
+  (is (= (prices/convert-price "£" "1") "£2.00 / £2.00")))  
 
 (deftest correctly-finds-multiple-elems
   (let [root-elem (node
@@ -90,5 +90,5 @@
         (confirm-text-was-set-to "£XXX"))))
 
 (deftest convert-price-divide-by-two
-  (is (= (prices/divide-by-two "9.99") "19.98 / 2")))
+  (is (= (prices/divide-by-two "£" "9.99") "£19.98 / £2.00")))
 
