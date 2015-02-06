@@ -22,14 +22,11 @@
 (deftest find-prices-case-pounds-and-pence
   (is (= (last (first (prices/find-prices "£300.00"))) "300.00")))
 
-(deftest convert-price-should-use-real-conversion-for-non-zero-real-prices
-  (is (= (prices/convert-price "£" "1" prices/conversion-functions) "£2.00 / £2.00")))  
-
 (deftest convert-price-should-select-from-conversion-function-list-using-price-value-as-list-index-with-modulus
-  (def mock-conversion-funcs [(fn [_ _] "0") (fn [_ _] "1") (fn [_ _] "2")])
-  (is (= (prices/convert-price "£" "1" mock-conversion-funcs) "1"))  
-  (is (= (prices/convert-price "£" "2" mock-conversion-funcs) "2"))  
-  (is (= (prices/convert-price "£" "3" mock-conversion-funcs) "0")))
+  (def mock-price-conversion-funcs [(fn [_ _] "0") (fn [_ _] "1") (fn [_ _] "2")])
+  (is (= (prices/convert-price "£" "1.99" mock-price-conversion-funcs) "1"))  
+  (is (= (prices/convert-price "£" "2.99" mock-price-conversion-funcs) "2"))  
+  (is (= (prices/convert-price "£" "3.99" mock-price-conversion-funcs) "0")))
 
 (deftest correctly-finds-multiple-elems
   (let [root-elem (node
