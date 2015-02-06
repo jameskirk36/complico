@@ -23,7 +23,12 @@
   (is (= (last (first (prices/find-prices "£300.00"))) "300.00")))
 
 (deftest convert-price-should-use-real-conversion-for-non-zero-real-prices
-  (is (= (prices/convert-price "£" "1") "£2.00 / £2.00")))  
+  (is (= (prices/convert-price "£" "1" prices/conversion-functions) "£2.00 / £2.00")))  
+
+(deftest convert-price-should-select-from-conversion-functions-list
+  (def mock-conversion-funcs [(fn [_ _] "1") (fn [_ _] "2")])
+  (is (= (prices/convert-price "£" "1" mock-conversion-funcs) "1"))  
+  (is (= (prices/convert-price "£" "2" mock-conversion-funcs) "2")))  
 
 (deftest correctly-finds-multiple-elems
   (let [root-elem (node

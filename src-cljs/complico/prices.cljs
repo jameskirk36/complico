@@ -20,6 +20,8 @@
                     (apply-price-formatting))]
     (str currency new-price " / " currency "2.00")))
 
+(def conversion-functions [divide-by-two])
+
 (defn find-prices [text]
   (re-seq #"(£)(.*)$" text))
 
@@ -29,16 +31,16 @@
 (defn- is-test-price [price]
   (= price "0"))
 
-(defn convert-price [currency price]
+(defn convert-price [currency price conv-funcs]
   (if (is-test-price price) 
     (convert-price-test currency price)
-    (divide-by-two currency price)))
+    (if (= price "1") (apply (first conv-funcs) currency price) (apply (second conv-funcs) currency price)))) 
 
 (defn- convert-prices [prices]
   (map
     #(vector
       (first %)
-      (convert-price (second %) (last %)))
+      (convert-price (second %) (last %) conversion-functions))
     prices))
 
 (defn find-elems [root-elem]
