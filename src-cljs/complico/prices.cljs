@@ -22,6 +22,9 @@
 
 (def conversion-functions [divide-by-two])
 
+(defn select-func [i funcs]
+  (nth funcs (- i 1)))
+
 (defn find-prices [text]
   (re-seq #"(£)(.*)$" text))
 

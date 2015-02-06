@@ -30,6 +30,10 @@
   (is (= (prices/convert-price "£" "1" mock-conversion-funcs) "1"))  
   (is (= (prices/convert-price "£" "2" mock-conversion-funcs) "2")))  
 
+(deftest select-func-returns-correct-fun-given-index
+  (let [func (prices/select-func 1 [(fn [] "1") (fn [] "2")])]
+    (is (= (apply func) "1"))))
+
 (deftest correctly-finds-multiple-elems
   (let [root-elem (node
                 [:body
