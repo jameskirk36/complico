@@ -25,10 +25,11 @@
 (deftest convert-price-should-use-real-conversion-for-non-zero-real-prices
   (is (= (prices/convert-price "£" "1" prices/conversion-functions) "£2.00 / £2.00")))  
 
-(deftest convert-price-should-select-from-conversion-functions-list
-  (def mock-conversion-funcs [(fn [_ _] "1") (fn [_ _] "2")])
+(deftest convert-price-should-select-from-conversion-function-list-using-price-value-as-list-index
+  (def mock-conversion-funcs [(fn [_ _] "1") (fn [_ _] "2") (fn [_ _] "3")])
   (is (= (prices/convert-price "£" "1" mock-conversion-funcs) "1"))  
-  (is (= (prices/convert-price "£" "2" mock-conversion-funcs) "2")))  
+  (is (= (prices/convert-price "£" "2" mock-conversion-funcs) "2"))  
+  (is (= (prices/convert-price "£" "3" mock-conversion-funcs) "3")))  
 
 (deftest select-func-returns-correct-fun-given-index
   (let [func (prices/select-func 1 [(fn [] "1") (fn [] "2")])]

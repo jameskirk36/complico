@@ -37,7 +37,7 @@
 (defn convert-price [currency price conv-funcs]
   (if (is-test-price price) 
     (convert-price-test currency price)
-    (if (= price "1") (apply (first conv-funcs) currency price) (apply (second conv-funcs) currency price)))) 
+    (apply (select-func (js/parseInt price) conv-funcs) currency price)))
 
 (defn- convert-prices [prices]
   (map
