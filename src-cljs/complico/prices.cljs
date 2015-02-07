@@ -18,7 +18,7 @@
                     (js/parseFloat)
                     (* 2.0)
                     (apply-price-formatting))]
-    (str currency new-price " / " currency "2.00")))
+    (dommy/html (node [:div (str currency new-price " / " currency "2.00")]))))
 
 (def conversion-functions [divide-by-two])
 
