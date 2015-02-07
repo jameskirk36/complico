@@ -27,7 +27,7 @@
                     (apply-price-formatting))]
     (dommy/html (node [:div (str currency new-price) [:sup "2"]]))))
 
-(def conversion-functions [divide-by-two])
+(def conversion-functions [divide-by-two squared])
 
 (defn select-func [i funcs]
   (->> funcs
@@ -49,6 +49,7 @@
     (convert-price-test currency price)
     (-> price 
       (js/parseInt)
+      (- 1)
       (select-func conv-funcs)
       (apply currency price))))
 

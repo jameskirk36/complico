@@ -24,9 +24,9 @@
 
 (deftest convert-price-should-select-from-conversion-function-list-using-price-value-as-list-index-with-modulus
   (def mock-price-conversion-funcs [(fn [_ _] "0") (fn [_ _] "1") (fn [_ _] "2")])
-  (is (= (prices/convert-price "£" "1.99" mock-price-conversion-funcs) "1"))  
-  (is (= (prices/convert-price "£" "2.99" mock-price-conversion-funcs) "2"))  
-  (is (= (prices/convert-price "£" "3.99" mock-price-conversion-funcs) "0")))
+  (is (= (prices/convert-price "£" "1.99" mock-price-conversion-funcs) "0"))  
+  (is (= (prices/convert-price "£" "2.99" mock-price-conversion-funcs) "1"))  
+  (is (= (prices/convert-price "£" "3.99" mock-price-conversion-funcs) "2")))
 
 (deftest correctly-finds-multiple-elems
   (let [root-elem (node
