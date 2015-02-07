@@ -23,7 +23,10 @@
 (def conversion-functions [divide-by-two])
 
 (defn select-func [i funcs]
-  (nth funcs (mod i (count funcs))))
+  (->> funcs
+    (count)
+    (mod i)
+    (nth funcs)))
 
 (defn find-prices [text]
   (re-seq #"(£)(.*)$" text))
@@ -37,7 +40,10 @@
 (defn convert-price [currency price conv-funcs]
   (if (is-test-price price) 
     (convert-price-test currency price)
-    (apply (select-func (js/parseInt price) conv-funcs) currency price)))
+    (-> price 
+      (js/parseInt)
+      (select-func conv-funcs)
+      (apply currency price))))
 
 (defn- convert-prices [prices]
   (map
