@@ -95,3 +95,5 @@
 (deftest convert-price-divide-by-two
   (is (= (prices/divide-by-two "£" "9.99") "£19.98 / £2.00")))
 
+(deftest convert-price-squared
+  (is (= (prices/squared "£" "9.99") "£3.16<sup>2</sup>")))
