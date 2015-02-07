@@ -4,7 +4,6 @@
   (:use-macros
    [dommy.macros :only [sel sel1 node]])
   (:require
-   [dommy.utils :as utils]
    [dommy.core :as dommy]
    [complico.prices :as prices]
    [complico.dom-helper :as dom-helper]
@@ -21,12 +20,6 @@
 
 (deftest find-prices-case-pounds-and-pence
   (is (= (last (first (prices/find-prices "£300.00"))) "300.00")))
-
-(deftest convert-price-should-select-from-conversion-function-list-using-price-value-as-list-index-with-modulus
-  (def mock-price-conversion-funcs [(fn [_ _] "0") (fn [_ _] "1") (fn [_ _] "2")])
-  (is (= (prices/convert-price "£" "1.99" mock-price-conversion-funcs) "0"))  
-  (is (= (prices/convert-price "£" "2.99" mock-price-conversion-funcs) "1"))  
-  (is (= (prices/convert-price "£" "3.99" mock-price-conversion-funcs) "2")))
 
 (deftest correctly-finds-multiple-elems
   (let [root-elem (node
@@ -92,8 +85,9 @@
         (dom-helper/get-text-from-node)
         (confirm-text-was-set-to "£XXX"))))
 
-(deftest convert-price-divide-by-two
-  (is (= (prices/divide-by-two "£" "9.99") "£19.98 / £2.00")))
+(deftest convert-price-should-select-from-conversion-function-list-using-price-value-as-list-index-with-modulus
+  (def mock-price-conversion-funcs [(fn [_ _] "0") (fn [_ _] "1") (fn [_ _] "2")])
+  (is (= (prices/convert-price "£" "1.99" mock-price-conversion-funcs) "0"))  
+  (is (= (prices/convert-price "£" "2.99" mock-price-conversion-funcs) "1"))  
+  (is (= (prices/convert-price "£" "3.99" mock-price-conversion-funcs) "2")))
 
-(deftest convert-price-squared
-  (is (= (prices/squared "£" "9.99") "£3.16<sup>2</sup>")))
