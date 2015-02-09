@@ -13,13 +13,19 @@
 ; needed to console.log works!
 (enable-console-print!)
 
-(deftest find-prices-case-pounds 
+(deftest find-prices-british-pounds
+  (is (= (second (first (prices/find-prices "£3"))) "£")))
+
+(deftest find-prices-american-dollars
+  (is (= (second (first (prices/find-prices "$3"))) "$")))
+
+(deftest find-prices-case-single 
   (is (= (last (first (prices/find-prices "£3"))) "3")))
 
-(deftest find-prices-case-pounds-multiple
+(deftest find-prices-case-hundreds
   (is (= (last (first (prices/find-prices "£300"))) "300")))
 
-(deftest find-prices-case-pounds-and-pence
+(deftest find-prices-case-with-decimal
   (is (= (last (first (prices/find-prices "£300.00"))) "300.00")))
 
 (deftest convert-price-should-select-from-conversion-function-list-using-price-value-as-list-index-with-modulus

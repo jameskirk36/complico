@@ -36,7 +36,7 @@
     (nth funcs)))
 
 (defn find-prices [text]
-  (re-seq #"(£)(.*)$" text))
+  (re-seq #"([£|$])(.*)$" text))
 
 (defn- convert-price-test [currency price]
   (str currency "XXX"))
