@@ -24,8 +24,11 @@
         (is-relative-link link) (str (host-minus-trailing-slash host) link)
         :else (str host link)))))
 
-(defn replace-the-links! [complico-host original-host]
-  (doseq [elem (sel :a)]
+(defn find-links [elem]
+  (sel elem "a,area"))
+
+(defn replace-the-links! [root-elem complico-host original-host]
+  (doseq [elem (find-links root-elem)]
     (if-let [initial-link (attrs/attr elem :href)]
         (let [grease (str complico-host "/convert?url=")
               new-link (grease-the-link original-host grease initial-link)]

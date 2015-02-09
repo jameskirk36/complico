@@ -35,11 +35,12 @@
 
 (defn adjust-page []
   (let [original-host (extract-host-from-dom "original_host_name")
-        complico-host (extract-host-from-dom "complico_host_name")]
-    (hide-existing-form-element! (sel1 :body)) 
-    (links/replace-the-links! complico-host original-host)
+        complico-host (extract-host-from-dom "complico_host_name")
+        body (sel1 :body)]
+    (hide-existing-form-element! body) 
+    (links/replace-the-links! body complico-host original-host)
     (add-ribbon-link! complico-host)
-    (prices/replace-prices-in-dom! (sel1 :body))))
+    (prices/replace-prices-in-dom! body)))
 
 ;call function on window.onload
 (set! (.-onload js/window) adjust-page)
