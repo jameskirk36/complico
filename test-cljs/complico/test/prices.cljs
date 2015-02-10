@@ -2,7 +2,7 @@
   (:require-macros [cemerick.cljs.test
                     :refer (are is deftest with-test run-tests testing test-var)])
   (:use-macros
-   [dommy.macros :only [sel]])
+   [dommy.macros :only [sel sel1]])
   (:require
    [complico.prices :as prices]
    [complico.dom-helper :as dom-helper]
@@ -46,29 +46,25 @@
 (defn confirm-text-remains [actual-text expected-text]
   (is (= actual-text expected-text)))
 
-(defn dom-with-price []
-  (hipo/create [:body [:div [:div "£0"]]]))
+(defn complex-dom-with-price []
+  (hipo/create [:body [:div [:div#with-price "£0"]]]))
 
-(deftest replace-price-in-dom-should-correctly-replace-price
-  (let [root-elem (dom-with-price)]
-    (prices/replace-prices-in-dom! root-elem)
-    (-> root-elem
-        (.-lastChild)
-        (.-lastChild)
-        (dom-helper/get-text-from-node)
-        (confirm-text-was-set-to "£XXX"))))
+(deftest replace-price-in-complex-dom-should-find-and-replace-price
+  (-> (complex-dom-with-price)
+    (prices/replace-prices-in-dom!)
+    (sel1 "#with-price")
+    (dom-helper/get-text-from-node)
+    (confirm-text-was-set-to "£XXX")))
 
-(deftest replace-price-in-dom-should-not-overwrite-html-on-empty-text-nodes
-  (let [root-elem (hipo/create 
-          [:body
-            [:div "   "
-              [:div "£0"]]])]
-    (prices/replace-prices-in-dom! root-elem)
-    (-> root-elem
-        (.-lastChild)
-        (.-lastChild)
-        (dom-helper/get-text-from-node)
-        (confirm-text-was-set-to "£XXX"))))
+(defn dom-with-price-but-higher-text-node []
+  (hipo/create [:body [:div "   " [:div#with-price "£0"]]]))
+
+(deftest replace-price-in-dom-should-not-overwrite-innerhtml-on-higher-empty-text-nodes
+  (-> (dom-with-price-but-higher-text-node)
+    (prices/replace-prices-in-dom!)
+    (sel1 "#with-price")
+    (dom-helper/get-text-from-node)
+    (confirm-text-was-set-to "£XXX")))
 
 (deftest convert-price-should-select-from-conversion-function-list-using-price-value-as-list-index-with-modulus
   (def mock-price-conversion-funcs [(fn [_ _] "0") (fn [_ _] "1") (fn [_ _] "2")])
