@@ -2,9 +2,9 @@
   (:require 
     [dommy.utils :as utils]
     [dommy.core :as dommy]
+    [hipo.interpreter :as hipo]
     [complico.conversion-funcs :as funcs]
     [complico.dom-helper :as dom-helper])
-    [hipo.interpreter :as hipo]
   (:use-macros
     [dommy.macros :only [sel sel1]]))
 
