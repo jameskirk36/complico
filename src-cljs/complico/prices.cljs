@@ -2,33 +2,13 @@
   (:require 
     [dommy.utils :as utils]
     [dommy.core :as dommy]
-    [complico.dom-helper :as dom-helper]
-    [goog.string :as gstring]
+    [complico.conversion-funcs :as funcs]
+    [complico.dom-helper :as dom-helper])
     [hipo.interpreter :as hipo]
-    [goog.string.format])
   (:use-macros
     [dommy.macros :only [sel sel1]]))
 
 (def ^:private price-elem-selector "div,span,li,p,a")
-
-(defn- apply-price-formatting [price]
-  (gstring/format "%.2f" price))
-
-(defn divide-by-two [currency price] 
-  (let [new-price (-> price
-                    (js/parseFloat)
-                    (* 2.0)
-                    (apply-price-formatting))]
-    (dommy/html (hipo/create [:div (str currency new-price " / " currency "2.00")]))))
-
-(defn squared [currency price] 
-  (let [new-price (-> price
-                    (js/parseFloat)
-                    (Math/sqrt)
-                    (apply-price-formatting))]
-    (dommy/html (hipo/create [:div (str currency new-price) [:sup "2"]]))))
-
-(def conversion-functions [divide-by-two squared])
 
 (defn select-func [i funcs]
   (->> funcs
@@ -58,7 +38,7 @@
   (map
     #(vector
       (first %)
-      (convert-price (second %) (last %) conversion-functions))
+      (convert-price (second %) (last %) funcs/conversion-functions))
     prices))
 
 (defn find-elems [root-elem]
