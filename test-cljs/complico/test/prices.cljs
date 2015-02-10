@@ -2,9 +2,8 @@
   (:require-macros [cemerick.cljs.test
                     :refer (are is deftest with-test run-tests testing test-var)])
   (:use-macros
-   [dommy.macros :only [sel sel1]])
+   [dommy.macros :only [sel]])
   (:require
-   [dommy.core :as dommy]
    [complico.prices :as prices]
    [complico.dom-helper :as dom-helper]
    [hipo.interpreter :as hipo]
@@ -28,15 +27,6 @@
 (deftest find-prices-case-with-decimal
   (is (= (last (first (prices/find-prices "£300.00"))) "300.00")))
 
-(deftest correctly-finds-multiple-elems
-  (let [root-elem (hipo/create
-                [:body
-                  [:div
-                    [:ol]
-                    [:span]]])
-        found-elems (prices/find-elems root-elem)]
-    (is (= 2 (count found-elems)))))
-
 (defn create-test-dom [elem]
   (hipo/create [:body [elem]]))
 
@@ -44,17 +34,23 @@
   (are [elem] (-> elem (create-test-dom) (prices/find-elems) (count) (= 1))
    :div :span :li :a :p :em :td :strong))
 
+(defn dom-with-two-price-elems []
+  (hipo/create [:body [:div [:ol] [:span]]]))
+
+(deftest finds-multiple-allowed-price-elems
+  (is (= 2 (count (prices/find-elems (dom-with-two-price-elems))))))
+
 (defn confirm-text-was-set-to [actual-text expected-text]
   (is (= actual-text expected-text)))
 
 (defn confirm-text-remains [actual-text expected-text]
   (is (= actual-text expected-text)))
 
+(defn dom-with-price []
+  (hipo/create [:body [:div [:div "£0"]]]))
+
 (deftest replace-price-in-dom-should-correctly-replace-price
-  (let [root-elem (hipo/create 
-          [:body
-            [:div
-              [:div "£0"]]])]
+  (let [root-elem (dom-with-price)]
     (prices/replace-prices-in-dom! root-elem)
     (-> root-elem
         (.-lastChild)
