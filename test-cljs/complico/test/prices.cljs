@@ -1,6 +1,6 @@
 (ns complico.tests.prices
   (:require-macros [cemerick.cljs.test
-                    :refer (is deftest with-test run-tests testing test-var)])
+                    :refer (are is deftest with-test run-tests testing test-var)])
   (:use-macros
    [dommy.macros :only [sel sel1]])
   (:require
@@ -37,30 +37,12 @@
         found-elems (prices/find-elems root-elem)]
     (is (= 2 (count found-elems)))))
 
-(deftest correctly-finds-elem-div
-  (let [root-elem (hipo/create [:body [:div]])
-       found-elems (prices/find-elems root-elem)]
-    (is (= 1 (count found-elems)))))
+(defn create-test-dom [elem]
+  (hipo/create [:body [elem]]))
 
-(deftest correctly-finds-elem-span
-  (let [root-elem (hipo/create [:body [:span]])
-       found-elems (prices/find-elems root-elem)]
-    (is (= 1 (count found-elems)))))
-
-(deftest correctly-finds-elem-li
-  (let [root-elem (hipo/create [:body [:li]])
-       found-elems (prices/find-elems root-elem)]
-    (is (= 1 (count found-elems)))))
-
-(deftest correctly-finds-elem-a
-  (let [root-elem (hipo/create [:body [:a]])
-       found-elems (prices/find-elems root-elem)]
-    (is (= 1 (count found-elems)))))
-
-(deftest correctly-finds-elem-p
-  (let [root-elem (hipo/create [:body [:p]])
-       found-elems (prices/find-elems root-elem)]
-    (is (= 1 (count found-elems)))))
+(deftest finds-allowed-price-elems
+  (are [elem] (-> elem (create-test-dom) (prices/find-elems) (count) (= 1))
+   :div :span :li :a :p :em :td :strong))
 
 (defn confirm-text-was-set-to [actual-text expected-text]
   (is (= actual-text expected-text)))

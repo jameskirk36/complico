@@ -8,7 +8,7 @@
   (:use-macros
     [dommy.macros :only [sel sel1]]))
 
-(def ^:private price-elem-selector "div,span,li,p,a")
+(def ^:private price-elem-selector "div,span,li,p,a,em,td,strong")
 
 (defn select-func [i funcs]
   (->> funcs
