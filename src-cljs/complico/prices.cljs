@@ -4,9 +4,10 @@
     [dommy.core :as dommy]
     [complico.dom-helper :as dom-helper]
     [goog.string :as gstring]
+    [hipo.interpreter :as hipo]
     [goog.string.format])
   (:use-macros
-    [dommy.macros :only [node sel sel1]]))
+    [dommy.macros :only [sel sel1]]))
 
 (def ^:private price-elem-selector "div,span,li,p,a")
 
@@ -18,14 +19,14 @@
                     (js/parseFloat)
                     (* 2.0)
                     (apply-price-formatting))]
-    (dommy/html (node [:div (str currency new-price " / " currency "2.00")]))))
+    (dommy/html (hipo/create [:div (str currency new-price " / " currency "2.00")]))))
 
 (defn squared [currency price] 
   (let [new-price (-> price
                     (js/parseFloat)
                     (Math/sqrt)
                     (apply-price-formatting))]
-    (dommy/html (node [:div (str currency new-price) [:sup "2"]]))))
+    (dommy/html (hipo/create [:div (str currency new-price) [:sup "2"]]))))
 
 (def conversion-functions [divide-by-two squared])
 

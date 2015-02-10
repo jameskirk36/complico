@@ -2,12 +2,13 @@
   (:require-macros [cemerick.cljs.test
                     :refer (is deftest with-test run-tests testing test-var)])
   (:use-macros
-   [dommy.macros :only [sel sel1 node]])
+   [dommy.macros :only [sel sel1]])
   (:require
    [dommy.utils :as utils]
    [dommy.core :as dommy]
    [complico.prices :as prices]
    [complico.dom-helper :as dom-helper]
+   [hipo.interpreter :as hipo]
    [cemerick.cljs.test :as t]))
 
 ; needed to console.log works!
@@ -35,7 +36,7 @@
   (is (= (prices/convert-price "£" "3.99" mock-price-conversion-funcs) "2")))
 
 (deftest correctly-finds-multiple-elems
-  (let [root-elem (node
+  (let [root-elem (hipo/create
                 [:body
                   [:div
                     [:ol]
@@ -44,27 +45,27 @@
     (is (= 2 (count found-elems)))))
 
 (deftest correctly-finds-elem-div
-  (let [root-elem (node [:body [:div]])
+  (let [root-elem (hipo/create [:body [:div]])
        found-elems (prices/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
 (deftest correctly-finds-elem-span
-  (let [root-elem (node [:body [:span]])
+  (let [root-elem (hipo/create [:body [:span]])
        found-elems (prices/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
 (deftest correctly-finds-elem-li
-  (let [root-elem (node [:body [:li]])
+  (let [root-elem (hipo/create [:body [:li]])
        found-elems (prices/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
 (deftest correctly-finds-elem-a
-  (let [root-elem (node [:body [:a]])
+  (let [root-elem (hipo/create [:body [:a]])
        found-elems (prices/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
 (deftest correctly-finds-elem-p
-  (let [root-elem (node [:body [:p]])
+  (let [root-elem (hipo/create [:body [:p]])
        found-elems (prices/find-elems root-elem)]
     (is (= 1 (count found-elems)))))
 
@@ -75,7 +76,7 @@
   (is (= actual-text expected-text)))
 
 (deftest replace-price-in-dom-should-correctly-replace-price
-  (let [root-elem (node 
+  (let [root-elem (hipo/create 
           [:body
             [:div
               [:div "£0"]]])]
@@ -87,7 +88,7 @@
         (confirm-text-was-set-to "£XXX"))))
 
 (deftest replace-price-in-dom-should-not-overwrite-html-on-empty-text-nodes
-  (let [root-elem (node 
+  (let [root-elem (hipo/create 
           [:body
             [:div "   "
               [:div "£0"]]])]

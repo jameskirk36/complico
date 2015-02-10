@@ -15,6 +15,7 @@
                   [selmer "0.7.1"]
                   [hiccup "1.0.5"]
                   [prismatic/dommy "0.1.3"]
+                  [hipo "0.2.0"]
                   [clj-http "0.9.2"]
 						[clj-webdriver "0.6.1"]
                   [org.clojure/clojurescript "0.0-2322"]]

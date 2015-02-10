@@ -6,10 +6,11 @@
     [goog.dom :as gdom]
     [complico.prices :as prices]
     [complico.links :as links]
-    [complico.dom-helper :as dom-helper])
+    [complico.dom-helper :as dom-helper]
+    [hipo.interpreter :as hipo])
 
   (:use-macros
-    [dommy.macros :only [node sel sel1]]))
+    [dommy.macros :only [sel sel1]]))
 
 ; this is needed to make nodelist iseqable!
 (extend-type js/NodeList
@@ -21,10 +22,9 @@
 
 (defn- add-ribbon-link! [complico-host]
   (dommy/append! (sel1 :body) 
-    (node 
-      [:a
-        {:id "complico-ribbon-link"
-         :href complico-host}
+    (hipo/create 
+      [:a#complico-ribbon-link
+        {:href complico-host}
         [:img 
           {:style "position: absolute; top: 0; right: 0; border: 0; z-index: 9000;"
            :src (str complico-host "/images/ribbon.png")}]])))

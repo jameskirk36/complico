@@ -5,7 +5,7 @@
     [dommy.attrs :as attrs])
 
   (:use-macros
-    [dommy.macros :only [node sel sel1]]))
+    [dommy.macros :only [sel sel1]]))
 
 (defn- is-full-link [link] 
   (= (subs link 0 4) "http"))

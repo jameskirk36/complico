@@ -1,9 +1,8 @@
 (ns complico.tests.links
   (:require-macros [cemerick.cljs.test
                     :refer (is deftest with-test run-tests testing test-var)])
-  (:use-macros
-   [dommy.macros :only [node]])
   (:require [cemerick.cljs.test :as t]
+            [hipo.interpreter :as hipo]
             [complico.links :as links]))
 
 (def ungreased-full-link "http://someurl.com/page")
@@ -29,11 +28,11 @@
   (is (= (links/grease-the-link host grease ungreased-relative-link-no-slash) expected-greased-link)))
 
 (deftest correctly-finds-elem-a
-  (let [root-elem (node [:body [:a {:href "somelink"}]])
+  (let [root-elem (hipo/create [:body [:a {:href "somelink"}]])
        found-elems (links/find-links root-elem)]
     (is (= 1 (count found-elems)))))
 
 (deftest correctly-finds-elem-area
-  (let [root-elem (node [:body [:area {:href "somelink"}]])
+  (let [root-elem (hipo/create [:body [:area {:href "somelink"}]])
        found-elems (links/find-links root-elem)]
     (is (= 1 (count found-elems)))))
