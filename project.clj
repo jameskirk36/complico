@@ -30,7 +30,8 @@
   :cljsbuild {
       ; Test command for running the unit tests in "test-cljs" (see below).
       ;     $ lein cljsbuild test
-    :test-commands {"unit" ["phantomjs" "runners/phantomjs.js" "resources/private/js/unit-test.js"]}
+    :test-commands {"unit" ["phantomjs" :runner
+                            "resources/private/js/unit-test.js"]}
     :builds {
       ; This build has the lowest level of optimizations, so it is
       ; useful when debugging the app.

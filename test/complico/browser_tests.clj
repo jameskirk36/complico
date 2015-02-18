@@ -8,7 +8,7 @@
 (defonce server (jetty/run-jetty #'core/app {:port 3000 :join? false}))
 
 (defn browser-up []
-  (set-driver! {:browser :firefox}))
+  (set-driver! {:browser :phantomjs}))
 
 (defn browser-down [] 
   (quit))
