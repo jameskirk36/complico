@@ -11,14 +11,14 @@
                   [ring/ring-devel "1.3.2"]
                   [ring-mock "0.1.5"]
                   [ring-serve "0.1.2"]
-                  [compojure "1.1.5"]
+                  [compojure "1.3.1"]
                   [selmer "0.7.1"]
                   [hiccup "1.0.5"]
                   [prismatic/dommy "0.1.3"]
-                  [hipo "0.2.0"]
-                  [clj-http "0.9.2"]
+                  [hipo "0.3.0"]
+                  [clj-http "1.0.1"]
 						[clj-webdriver "0.6.1"]
-                  [org.clojure/clojurescript "0.0-2322"]]
+                  [org.clojure/clojurescript "0.0-2850"]]
   
   :uberjar-name "complico.jar"
   :plugins  [[lein-ring "0.8.3"]
