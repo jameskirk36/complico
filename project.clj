@@ -6,9 +6,9 @@
   :source-paths ["src"]
   :dependencies [
                   [org.clojure/clojure "1.6.0"]
-                  [ring/ring-core "1.3.1"]
-                  [ring/ring-jetty-adapter "1.3.1"]
-                  [ring/ring-devel "1.3.1"]
+                  [ring/ring-core "1.3.2"]
+                  [ring/ring-jetty-adapter "1.3.2"]
+                  [ring/ring-devel "1.3.2"]
                   [ring-mock "0.1.5"]
                   [ring-serve "0.1.2"]
                   [compojure "1.1.5"]
