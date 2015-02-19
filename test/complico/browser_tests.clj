@@ -4,7 +4,6 @@
   (:require [complico.core :as core]
             [ring.adapter.jetty :as jetty]))
 
-
 (defonce server (jetty/run-jetty #'core/app {:port 3000 :join? false}))
 
 (defn browser-up []
@@ -57,14 +56,11 @@
   (is (existing-form-hidden?))
   (click link-to-page-with-links)
   (click link-to-page-with-prices)
-  (is (= (extract-price-from "div") expected-price))
-  (is (= (extract-price-from "span") expected-price)))
+  (is (= (extract-price-from "div") expected-price)))
 
 (deftest clicking-on-ribbon-goes-back-to-homepage
   (to home-page)
   (ensure-redirect-to-mock-search-results-page)
-
   (perform-search)
-
   (click ribbon-link)
   (is (= (current-url) home-page)))

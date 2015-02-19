@@ -2,7 +2,8 @@
   (use compojure.core)
   (use ring.middleware.params)
   (use ring.middleware.cookies)
-  (:require [ring.adapter.jetty :as jetty]
+  (:require [complico.external :as external]
+            [ring.adapter.jetty :as jetty]
             [ring.util.response :as response]
             [ring.util.codec :as codec]
             [clj-http.client :as client]
@@ -10,9 +11,6 @@
             [clojure.string :as string]
             [selmer.parser :as selmer]
             [hiccup.core :as hiccup]))
-
-; url of the external search engine to use
-(def external-search-url "https://www.google.co.uk/search?btnI=1&q=")
 
 (def home-page 
   (selmer/render-file "templates/index.html" {}))
@@ -48,32 +46,13 @@
        :complico_host_name complico-host
        :src (str complico-host "/js/complico-debug.js")}]))
 
-(defn get-search-url-from-cookie [cookies]
-  (get (cookies "test") :value))
-
-(defn build-search-url [search-term]
-  (str external-search-url search-term))
-
-(defn get-redirected-location [url]
-  (-> url
-    (client/head)
-    (:trace-redirects)
-    (last)))
-
-(defn get-search-url [cookies search-term]
-  (if (contains? cookies "test") 
-    (get-search-url-from-cookie cookies)
-    (-> search-term 
-      (build-search-url)
-      (get-redirected-location))))
-
 (defroutes my-handler
   (GET "/" [] 
     home-page)
 
   (GET "/search" {cookies :cookies params :query-params server :server-name port :server-port}
     (let [search-term (params "search-term")
-          search-url (get-search-url cookies search-term)
+          search-url (external/get-search-url cookies search-term)
           grease (create-grease (create-host server port))
           redirect-url (str grease (codec/url-encode search-url)) ]
       (response/redirect redirect-url)))
