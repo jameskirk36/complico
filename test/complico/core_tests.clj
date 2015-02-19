@@ -9,4 +9,3 @@
 
 (deftest create-host-should-not-add-port-when-not-localhost 
   (is (= (complico/create-host "compli.co" "80") "http://compli.co")))
-

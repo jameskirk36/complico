@@ -51,8 +51,8 @@
 (defn get-search-url-from-cookie [cookies]
   (get (cookies "test") :value))
 
-(defn build-search-url-from-params [params]
-  (str external-search-url (params "search-term")))
+(defn build-search-url [search-term]
+  (str external-search-url search-term))
 
 (defn get-redirected-location [url]
   (-> url
@@ -60,17 +60,20 @@
     (:trace-redirects)
     (last)))
 
-(defn get-search-url [cookies params]
+(defn get-search-url [cookies search-term]
   (if (contains? cookies "test") 
     (get-search-url-from-cookie cookies)
-    (get-redirected-location (build-search-url-from-params params))))
+    (-> search-term 
+      (build-search-url)
+      (get-redirected-location))))
 
 (defroutes my-handler
   (GET "/" [] 
     home-page)
 
   (GET "/search" {cookies :cookies params :query-params server :server-name port :server-port}
-    (let [search-url (get-search-url cookies params)
+    (let [search-term (params "search-term")
+          search-url (get-search-url cookies search-term)
           grease (create-grease (create-host server port))
           redirect-url (str grease (codec/url-encode search-url)) ]
       (response/redirect redirect-url)))
