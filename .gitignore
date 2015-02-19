@@ -11,3 +11,4 @@ pom.xml.asc
 /.nrepl-port
 /resources/private/js/
 /resources/public/js/
+phantomjsdriver.log
