@@ -12,20 +12,26 @@
 ; needed to console.log works!
 (enable-console-print!)
 
+(defn get-extracted-currency [prices]
+  (second (first prices)))
+
+(defn get-extracted-price [prices]
+  (nth (first prices) 2))
+
 (deftest find-prices-british-pounds
-  (is (= (second (first (prices/find-prices "£3"))) "£")))
+  (is (= (get-extracted-currency (prices/find-prices "£3")) "£")))
 
 (deftest find-prices-american-dollars
-  (is (= (second (first (prices/find-prices "$3"))) "$")))
+  (is (= (get-extracted-currency (prices/find-prices "$3")) "$")))
 
 (deftest find-prices-case-single 
-  (is (= (nth (first (prices/find-prices "£3")) 2) "3")))
+  (is (= (get-extracted-price (prices/find-prices "£3")) "3")))
 
 (deftest find-prices-case-hundreds
-  (is (= (nth (first (prices/find-prices "£300")) 2) "300")))
+  (is (= (get-extracted-price (prices/find-prices "£300")) "300")))
 
 (deftest find-prices-case-with-decimal
-  (is (= (nth (first (prices/find-prices "£300.00")) 2) "300.00")))
+  (is (= (get-extracted-price (prices/find-prices "£300.00")) "300.00")))
 
 (defn create-test-dom [elem]
   (hipo/create [:body [elem]]))
