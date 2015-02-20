@@ -17,7 +17,7 @@
     (nth funcs)))
 
 (defn find-prices [text]
-  (re-seq #"([£|$])(.*)$" text))
+  (re-seq #"([£|$])([0-9]+(\.[0-9]{2})?)" text))
 
 (defn- convert-price-test [currency price]
   (str currency "XXX"))
@@ -38,7 +38,7 @@
   (map
     #(vector
       (first %)
-      (convert-price (second %) (last %) funcs/conversion-functions))
+      (convert-price (second %) (nth % 2) funcs/conversion-functions))
     prices))
 
 (defn find-elems [root-elem]
@@ -55,7 +55,7 @@
     (convert-prices)
     (build-new-price-text original-text)))
 
-(defn- replace-price-on-elem! [elem]
+(defn replace-price-on-elem! [elem]
   (if-let [text (dom-helper/get-text-from-node elem)]
     (if-let [prices (find-prices text)]
       (->> text

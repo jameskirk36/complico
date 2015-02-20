@@ -19,13 +19,13 @@
   (is (= (second (first (prices/find-prices "$3"))) "$")))
 
 (deftest find-prices-case-single 
-  (is (= (last (first (prices/find-prices "£3"))) "3")))
+  (is (= (nth (first (prices/find-prices "£3")) 2) "3")))
 
 (deftest find-prices-case-hundreds
-  (is (= (last (first (prices/find-prices "£300"))) "300")))
+  (is (= (nth (first (prices/find-prices "£300")) 2) "300")))
 
 (deftest find-prices-case-with-decimal
-  (is (= (last (first (prices/find-prices "£300.00"))) "300.00")))
+  (is (= (nth (first (prices/find-prices "£300.00")) 2) "300.00")))
 
 (defn create-test-dom [elem]
   (hipo/create [:body [elem]]))
@@ -72,3 +72,20 @@
   (is (= (prices/convert-price "£" "2.99" mock-price-conversion-funcs) "1"))  
   (is (= (prices/convert-price "£" "3.99" mock-price-conversion-funcs) "2")))
 
+(defn single-elem-with-price []
+  (hipo/create [:div "£0"]))
+
+(deftest should-replace-price-on-elem
+  (-> (single-elem-with-price)
+    (prices/replace-price-on-elem!)
+    (dom-helper/get-text-from-node)
+    (confirm-text-was-set-to "£XXX")))
+
+(defn single-elem-with-price-and-trailing-text []
+  (hipo/create [:div "£0 trailing text should stay here"]))
+
+(deftest should-replace-price-on-elem-and-leave-trailing-text
+  (-> (single-elem-with-price-and-trailing-text)
+    (prices/replace-price-on-elem!)
+    (dom-helper/get-text-from-node)
+    (confirm-text-was-set-to "£XXX trailing text should stay here")))
