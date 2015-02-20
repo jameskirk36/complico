@@ -89,3 +89,12 @@
     (prices/replace-price-on-elem!)
     (dom-helper/get-text-from-node)
     (confirm-text-was-set-to "£XXX trailing text should stay here")))
+
+(defn single-elem-with-multiple-prices []
+  (hipo/create [:div "£0 £0"]))
+
+(deftest should-replace-multiple-prices-on-elem
+  (-> (single-elem-with-multiple-prices)
+    (prices/replace-price-on-elem!)
+    (dom-helper/get-text-from-node)
+    (confirm-text-was-set-to "£XXX £XXX")))
