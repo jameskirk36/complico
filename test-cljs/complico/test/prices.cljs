@@ -72,29 +72,23 @@
   (is (= (prices/convert-price "£" "2.99" mock-price-conversion-funcs) "1"))  
   (is (= (prices/convert-price "£" "3.99" mock-price-conversion-funcs) "2")))
 
-(defn single-elem-with-price []
-  (hipo/create [:div "£0"]))
+(defn create-elem-with-text [text]
+  (hipo/create [:div text]))
 
 (deftest should-replace-price-on-elem
-  (-> (single-elem-with-price)
+  (-> (create-elem-with-text "£0")
     (prices/replace-price-on-elem!)
     (dom-helper/get-text-from-node)
     (confirm-text-was-set-to "£XXX")))
 
-(defn single-elem-with-price-and-trailing-text []
-  (hipo/create [:div "£0 trailing text should stay here"]))
-
 (deftest should-replace-price-on-elem-and-leave-trailing-text
-  (-> (single-elem-with-price-and-trailing-text)
+  (-> (create-elem-with-text "£0 trailing text")
     (prices/replace-price-on-elem!)
     (dom-helper/get-text-from-node)
-    (confirm-text-was-set-to "£XXX trailing text should stay here")))
-
-(defn single-elem-with-multiple-prices []
-  (hipo/create [:div "£0 £0"]))
+    (confirm-text-was-set-to "£XXX trailing text")))
 
 (deftest should-replace-multiple-prices-on-elem
-  (-> (single-elem-with-multiple-prices)
+  (-> (create-elem-with-text "£0 £0")
     (prices/replace-price-on-elem!)
     (dom-helper/get-text-from-node)
     (confirm-text-was-set-to "£XXX £XXX")))
