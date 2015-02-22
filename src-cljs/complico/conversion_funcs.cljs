@@ -9,14 +9,14 @@
 (defn- apply-price-formatting [price]
   (gstring/format "%.2f" price))
 
-(defn divide-by-two [currency price] 
+(defn divide-by-two [currency price & args] 
   (let [new-price (-> price
                     (js/parseFloat)
                     (* 2.0)
                     (apply-price-formatting))]
     (dommy/html (hipo/create [:div (str currency new-price " / " currency "2.00")]))))
 
-(defn squared [currency price] 
+(defn squared [currency price & args] 
   (let [new-price (-> price
                     (js/parseFloat)
                     (Math/sqrt)

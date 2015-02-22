@@ -10,35 +10,35 @@
 
 (def ^:private price-elem-selector "div,span,li,p,a,em,td,strong")
 
-(defn select-func [i funcs]
-  (->> funcs
-    (count)
-    (mod i)
-    (nth funcs)))
+(defn select-conv-func [price conv-funcs]
+  (if (is-test-price price) 
+    convert-price-test
+    (let [i (-> price 
+              (js/parseInt)
+              (- 1))]
+     (->> conv-funcs
+       (count)
+       (mod i)
+       (nth conv-funcs)))))
 
 (defn find-prices [text]
   (re-seq #"([£|$])([0-9]+(\.[0-9]{2})?)" text))
 
-(defn- convert-price-test [currency price]
+(defn- convert-price-test [currency price & args]
   (str currency "XXX"))
 
 (defn- is-test-price [price]
   (= price "0"))
 
-(defn convert-price [currency price conv-funcs]
-  (if (is-test-price price) 
-    (convert-price-test currency price)
-    (-> price 
-      (js/parseInt)
-      (- 1)
-      (select-func conv-funcs)
-      (apply currency price))))
+(defn convert-price [currency price select-conv-func conv-funcs]
+  (let [conv-func (select-conv-func price conv-funcs)]
+    (apply conv-func currency price nil)))
 
 (defn- convert-prices [prices]
   (map
     #(vector
       (first %)
-      (convert-price (second %) (nth % 2) funcs/conversion-functions))
+      (convert-price (second %) (nth % 2) select-conv-func funcs/conversion-functions))
     prices))
 
 (defn find-elems [root-elem]

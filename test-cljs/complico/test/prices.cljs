@@ -72,11 +72,17 @@
     (dom-helper/get-text-from-node)
     (confirm-text-was-set-to "£XXX")))
 
-(deftest convert-price-should-select-from-conversion-function-list-using-price-value-as-list-index-with-modulus
-  (def mock-price-conversion-funcs [(fn [_ _] "0") (fn [_ _] "1") (fn [_ _] "2")])
-  (is (= (prices/convert-price "£" "1.99" mock-price-conversion-funcs) "0"))  
-  (is (= (prices/convert-price "£" "2.99" mock-price-conversion-funcs) "1"))  
-  (is (= (prices/convert-price "£" "3.99" mock-price-conversion-funcs) "2")))
+(deftest select-conv-func-should-select-from-conversion-function-list-using-price-value-as-list-index-with-modulus
+  (def mock-price-conversion-funcs [(fn [_ _]) (fn [_ _]) (fn [_ _])])
+  (is (= (prices/select-conv-func "1.99" mock-price-conversion-funcs) (nth mock-price-conversion-funcs 0)))  
+  (is (= (prices/select-conv-func "2.99" mock-price-conversion-funcs) (nth mock-price-conversion-funcs 1)))  
+  (is (= (prices/select-conv-func "3.99" mock-price-conversion-funcs) (nth mock-price-conversion-funcs 2))))
+
+(deftest convert-price-should-call-select-conv-func
+  (def mock-conv-funcs [(fn [_ price] price)])
+  (defn mock-conv-func-selector [_ conv-funcs]
+   (first conv-funcs))
+  (is (= (prices/convert-price "£" "1.99" mock-conv-func-selector mock-conv-funcs) "1.99")))
 
 (defn create-elem-with-text [text]
   (hipo/create [:div text]))
