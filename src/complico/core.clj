@@ -30,15 +30,12 @@
 (defn request-url-page [url user-agent] 
   (:body (client/get url {:headers {"user-agent" user-agent}})))
 
-(defn create-grease [host]
-  (str host "/convert?url="))
-
 (defn create-host [server port]
   (if (= server "localhost") 
     (str "http://" server ":" port)
   (str "http://" server)))
 
-(defn create-new-script [original-host complico-host]
+(defn create-cljs-html [original-host complico-host]
   (hiccup/html
     [:script 
       {:id "complico_host_vars"
@@ -46,25 +43,38 @@
        :complico_host_name complico-host
        :src (str complico-host "/js/complico-debug.js")}]))
 
+(defn perform-search [search-term cookies server port]
+  (let [search-url (external/get-search-url cookies search-term)
+        complico-host (create-host server port)]
+    (->> search-url
+      (codec/url-encode)
+      (str complico-host "/convert?url=")
+      (response/redirect))))
+
+(defn load-page [url ua]
+  (request-url-page url ua))
+
+(defn load-page-for-conversion [url ua server port]
+  (let [original-page-html (load-page url ua)
+        original-host (extract-host url)
+        complico-host (create-host server port)
+        prefix (create-base-html original-host)
+        suffix (create-cljs-html original-host complico-host)]
+    (str prefix original-page-html suffix)))
+
 (defroutes my-handler
   (GET "/" [] 
     home-page)
 
   (GET "/search" {cookies :cookies params :query-params server :server-name port :server-port}
-    (let [search-term (params "search-term")
-          search-url (external/get-search-url cookies search-term)
-          grease (create-grease (create-host server port))
-          redirect-url (str grease (codec/url-encode search-url)) ]
-      (response/redirect redirect-url)))
+    (let [search-term (params "search-term")]
+      (perform-search search-term cookies server port)))
 
   (GET "/convert" {params :query-params server :server-name port :server-port headers :headers}
     (let [url (params "url")
-          original-host (extract-host url)
-          base-element (create-base-html original-host)
-          original-page-html (request-url-page url (headers "user-agent"))
-          complico-host (create-host server port)
-          script-include-cljs (create-new-script original-host complico-host)]
-      (str base-element original-page-html script-include-cljs )))
+          ua (headers "user-agent")]
+      (load-page-for-conversion url ua server port)))
+
   (route/resources "/")
   (route/not-found "Page not found"))
 

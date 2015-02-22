@@ -1,6 +1,5 @@
 (ns complico.prices
   (:require 
-    [dommy.utils :as utils]
     [dommy.core :as dommy]
     [hipo.interpreter :as hipo]
     [complico.conversion-funcs :as funcs]
