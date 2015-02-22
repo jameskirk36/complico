@@ -23,15 +23,21 @@
 (defn find-prices [text]
   (re-seq #"([£|$])([0-9]+(\.[0-9]{2})?)" text))
 
-(defn- convert-price-test [currency price & args]
-  (str currency "XXX"))
+(defn- convert-price-test [currency _ & args]
+  (hipo/create [:div (str currency "XXX")]))
 
 (defn- is-test-price [price]
   (= price "0"))
 
+(defn- to-html [elem]
+  (dommy/html elem))
+
 (defn convert-price [currency price select-conv-func conv-funcs]
-  (let [conv-func (select-conv-func price conv-funcs)]
-    (apply conv-func currency price nil)))
+  (let [conv-func (select-conv-func price conv-funcs)
+        fprice (js/parseFloat price)]
+    (-> conv-func
+      (apply currency fprice nil)
+      (to-html))))
 
 (defn- build-replacement [price-parts]
   (let [original-price (first price-parts)

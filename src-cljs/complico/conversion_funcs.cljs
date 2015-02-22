@@ -1,7 +1,6 @@
 ; All the price conversion functions
 (ns complico.conversion-funcs
   (:require 
-    [dommy.core :as dommy]
     [hipo.interpreter :as hipo]
     [goog.string :as gstring]
     [goog.string.format]))
@@ -11,16 +10,14 @@
 
 (defn divide-by-two [currency price & args] 
   (let [new-price (-> price
-                    (js/parseFloat)
                     (* 2.0)
                     (apply-price-formatting))]
-    (dommy/html (hipo/create [:div (str currency new-price " / " currency "2.00")]))))
+    (hipo/create [:div (str currency new-price " / " currency "2.00")])))
 
 (defn squared [currency price & args] 
   (let [new-price (-> price
-                    (js/parseFloat)
                     (Math/sqrt)
                     (apply-price-formatting))]
-    (dommy/html (hipo/create [:div (str currency new-price) [:sup "2"]]))))
+    (hipo/create [:div (str currency new-price) [:sup "2"]])))
 
 (def conversion-functions [divide-by-two squared])

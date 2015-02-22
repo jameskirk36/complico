@@ -79,7 +79,8 @@
     (is (= (prices/select-conv-func "3.99" mock-price-conversion-funcs) (nth mock-price-conversion-funcs 2)))))
 
 (deftest convert-price-should-call-select-conv-func
-  (let [mock-conv-funcs [(fn [_ price] price)]
+  (let [mock-conv-func (fn [_ price] (hipo/create [:div price]))
+        mock-conv-funcs [mock-conv-func]
         mock-conv-func-selector (fn [_ conv-funcs] (first conv-funcs))]
     (is (= (prices/convert-price "£" "1.99" mock-conv-func-selector mock-conv-funcs) "1.99"))))
 
