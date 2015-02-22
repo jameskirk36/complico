@@ -33,12 +33,15 @@
   (let [conv-func (select-conv-func price conv-funcs)]
     (apply conv-func currency price nil)))
 
+(defn- build-replacement [price-parts]
+  (let [original-price (first price-parts)
+        currency (second price-parts)
+        price (nth price-parts 2)
+        replacement-price (convert-price currency price select-conv-func funcs/conversion-functions)] 
+  (vector original-price replacement-price))) 
+
 (defn- convert-prices [prices]
-  (map
-    #(vector
-      (first %)
-      (convert-price (second %) (nth % 2) select-conv-func funcs/conversion-functions))
-    prices))
+  (map build-replacement prices))
 
 (defn find-elems [root-elem]
   (sel root-elem price-elem-selector))
