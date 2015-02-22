@@ -1,6 +1,5 @@
 (ns complico.links
   (:require 
-    [dommy.utils :as utils]
     [dommy.core :as dommy]
     [dommy.attrs :as attrs])
 
@@ -8,13 +7,19 @@
     [dommy.macros :only [sel sel1]]))
 
 (defn- is-full-link [link] 
-  (= (subs link 0 4) "http"))
+  (-> link
+    (subs 0 4)
+    (= "http")))
 
 (defn- is-relative-link [link]
-  (= (subs link 0 1) "/"))
+  (-> link
+    (subs 0 1)
+    (= "/")))
 
 (defn- host-minus-trailing-slash [host]
-  (apply str (drop-last 1 host)))
+  (->> host
+    (drop-last 1)
+    (apply str)))
 
 (defn grease-the-link [host grease link]
   (str grease 
@@ -32,5 +37,5 @@
     (if-let [initial-link (attrs/attr elem :href)]
         (let [grease (str complico-host "/convert?url=")
               new-link (grease-the-link original-host grease initial-link)]
-             (attrs/set-attr! elem :href new-link)))))
+          (attrs/set-attr! elem :href new-link)))))
 
