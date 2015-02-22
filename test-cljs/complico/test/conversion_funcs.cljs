@@ -1,6 +1,6 @@
 (ns complico.tests.conversion-funcs
   (:require-macros [cemerick.cljs.test
-                    :refer (is deftest with-test run-tests testing test-var)])
+                    :refer (is deftest)])
   (:require
    [dommy.core :as dommy]
    [complico.conversion-funcs :as funcs]

@@ -21,7 +21,7 @@
        (nth conv-funcs)))))
 
 (defn find-prices [text]
-  (re-seq #"([£|$])([0-9]+(\.[0-9]{2})?)" text))
+  (re-seq #"([£|$])([0-9,]+(\.[0-9]{2})?)" text))
 
 (defn- convert-price-test [currency _ & args]
   (hipo/create [:div (str currency "XXX")]))
@@ -32,11 +32,16 @@
 (defn- to-html [elem]
   (dommy/html elem))
 
-(defn convert-price [currency price select-conv-func conv-funcs]
-  (let [conv-func (select-conv-func price conv-funcs)
-        fprice (js/parseFloat price)]
+(defn- sanitise [price]
+  (clojure.string/replace price "," ""))
+
+(defn convert-price [currency raw-price select-conv-func conv-funcs]
+  (let [conv-func (select-conv-func raw-price conv-funcs)
+        price (-> raw-price 
+                (sanitise)
+                (js/parseFloat))]
     (-> conv-func
-      (apply currency fprice nil)
+      (apply currency price nil)
       (to-html))))
 
 (defn- build-replacement [price-parts]

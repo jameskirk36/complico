@@ -30,8 +30,8 @@
 (deftest find-prices-case-hundreds
   (is (= (get-extracted-price (prices/find-prices "£300")) "300")))
 
-(deftest find-prices-case-with-decimal
-  (is (= (get-extracted-price (prices/find-prices "£300.00")) "300.00")))
+(deftest find-prices-case-thousands
+  (is (= (get-extracted-price (prices/find-prices "£3,000.00")) "3,000.00")))
 
 (defn create-test-dom [elem]
   (hipo/create [:body [elem]]))
@@ -83,6 +83,12 @@
         mock-conv-funcs [mock-conv-func]
         mock-conv-func-selector (fn [_ conv-funcs] (first conv-funcs))]
     (is (= (prices/convert-price "£" "1.99" mock-conv-func-selector mock-conv-funcs) "1.99"))))
+
+(deftest convert-price-should-remove-commas-in-prices-with-thousands
+  (let [mock-conv-func (fn [_ price] (hipo/create [:div price]))
+        mock-conv-funcs [mock-conv-func]
+        mock-conv-func-selector (fn [_ conv-funcs] (first conv-funcs))]
+    (is (= (prices/convert-price "£" "1,000" mock-conv-func-selector mock-conv-funcs) "1000"))))
 
 (defn create-elem-with-text [text]
   (hipo/create [:div text]))
