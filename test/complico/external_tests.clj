@@ -1,4 +1,4 @@
-(ns complico.core-tests
+(ns complico.external-tests
 	(:use 
 		[clojure.test])
    (:require

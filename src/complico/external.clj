@@ -23,3 +23,6 @@
       (build-search-url)
       (get-redirected-location))))
 
+; make a http request to url and download the body as string
+(defn request-url-page [url user-agent] 
+  (:body (client/get url {:headers {"user-agent" user-agent}})))

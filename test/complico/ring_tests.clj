@@ -6,7 +6,7 @@
       [ring.util.serve]))
 
 (def test-url "http://localhost:3000/test_page_with_links.html")
-(def expected-base-html "<head><base href=\"http://localhost:3000/\"/></head><a id=\"test_page_with_prices\"")
+(def expected-base-html "<head><base href=\"http://localhost:3000/\" /></head><a id=\"test_page_with_prices\"")
 
 (deftest ring-tests
   ; start the server, headless
