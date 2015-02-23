@@ -18,7 +18,8 @@
   (let [new-price (-> price
                     (Math/sqrt)
                     (apply-price-formatting))]
-    (hipo/create [:div (str currency new-price) [:sup "2"]])))
+    (hipo/create [:div (str currency new-price) 
+                   [:sup {:style "font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; top: -0.5em;"} "2"]])))
 
 (defn square-root [currency price & args] 
   (let [new-price (-> price
