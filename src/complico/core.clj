@@ -5,24 +5,23 @@
   (:require [complico.external :as external]
             [complico.utils :as utils]
             [complico.view :as view]
+            [complico.middleware :refer [wrap-complico-host]]
             [ring.adapter.jetty :as jetty]
             [ring.util.response :as response]
             [ring.util.codec :as codec]
             [compojure.route :as route]))
 
 
-(defn perform-search [search-term cookies server port]
-  (let [search-url (external/get-search-url cookies search-term)
-        complico-host (utils/create-host server port)]
+(defn perform-search [search-term cookies complico-host]
+  (let [search-url (external/get-search-url cookies search-term)]
     (->> search-url
       (codec/url-encode)
       (str complico-host "/convert?url=")
       (response/redirect))))
 
-(defn load-page-for-conversion [url ua server port]
+(defn load-page-for-conversion [url ua complico-host]
   (let [original-page-html (external/request-url-page url ua)
         original-host (utils/extract-host url)
-        complico-host (utils/create-host server port)
         prefix (view/create-base-html original-host)
         suffix (view/create-cljs-html original-host complico-host)]
     (str prefix original-page-html suffix)))
@@ -31,14 +30,14 @@
   (GET "/" [] 
     view/home-page)
 
-  (GET "/search" {cookies :cookies params :query-params server :server-name port :server-port}
+  (GET "/search" {params :query-params complico-host :complico-host cookies :cookies}
     (let [search-term (params "search-term")]
-      (perform-search search-term cookies server port)))
+      (perform-search search-term cookies complico-host)))
 
-  (GET "/convert" {params :query-params server :server-name port :server-port headers :headers}
+  (GET "/convert" {params :query-params complico-host :complico-host headers :headers}
     (let [url (params "url")
           ua (headers "user-agent")]
-      (load-page-for-conversion url ua server port)))
+      (load-page-for-conversion url ua complico-host)))
 
   (route/resources "/")
   (route/not-found "Page not found"))
@@ -47,7 +46,8 @@
 (def app 
   (-> my-handler
     (wrap-params)
-    (wrap-cookies)))
+    (wrap-cookies)
+    (wrap-complico-host)))
 
 ; entry point for running on heroku
 (defn -main [port]
