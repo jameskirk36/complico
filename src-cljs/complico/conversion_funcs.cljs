@@ -20,4 +20,12 @@
                     (apply-price-formatting))]
     (hipo/create [:div (str currency new-price) [:sup "2"]])))
 
-(def conversion-functions [divide-by-two squared])
+(defn square-root [currency price & args] 
+  (let [new-price (-> price
+                    (* price)
+                    (apply-price-formatting))]
+    (hipo/create [:div 
+                   [:span {:style "white-space: nowrap; font-size:larger"} (gstring/unescapeEntities "&radic;")
+                     [:span {:style "text-decoration:overline;"} (str currency new-price)]]])))
+
+(def conversion-functions [divide-by-two squared square-root])
