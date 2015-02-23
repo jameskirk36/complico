@@ -26,7 +26,7 @@
       [:a#complico-ribbon-link
         {:href complico-host}
         [:img 
-          {:style "position: absolute; top: 0; right: 0; border: 0; z-index: 9000;"
+          {:style "position: fixed; top: 0; right: 0; border: 0; z-index: 9000;"
            :src (str complico-host "/images/ribbon.png")}]])))
 
 (defn hide-existing-form-element! [root-node]
