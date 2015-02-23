@@ -37,5 +37,6 @@
     (if-let [initial-link (attrs/attr elem :href)]
         (let [grease (str complico-host "/convert?url=")
               new-link (grease-the-link original-host grease initial-link)]
-          (attrs/set-attr! elem :href new-link)))))
+          (attrs/set-attr! elem :href new-link))))
+  root-elem)
 

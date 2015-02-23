@@ -77,5 +77,5 @@
 
 (defn replace-prices-in-dom! [root-node]
   (let [elems (find-elems root-node)]
-    (doall (map replace-price-on-elem! elems))))
-
+    (doall (map replace-price-on-elem! elems)))
+  root-node) 

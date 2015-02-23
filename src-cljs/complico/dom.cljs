@@ -3,7 +3,6 @@
     [dommy.utils :as utils]
     [dommy.core :as dommy]
     [dommy.attrs :as attrs]
-    [goog.dom :as gdom]
     [complico.prices :as prices]
     [complico.links :as links]
     [complico.dom-helper :as dom-helper]
@@ -20,8 +19,8 @@
 (defn- extract-host-from-dom [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
 
-(defn- add-ribbon-link! [complico-host]
-  (dommy/append! (sel1 :body) 
+(defn- add-ribbon-link! [body complico-host]
+  (dommy/append! body 
     (hipo/create 
       [:a#complico-ribbon-link
         {:href complico-host}
@@ -31,16 +30,18 @@
 
 (defn hide-existing-form-element! [root-node]
   (if-let [form (sel1 root-node :form)]
-    (attrs/set-attr! form :style "display: none;")))
+    (attrs/set-attr! form :style "display: none;"))
+  root-node)
 
 (defn adjust-page []
   (let [original-host (extract-host-from-dom "original_host_name")
         complico-host (extract-host-from-dom "complico_host_name")
         body (sel1 :body)]
-    (hide-existing-form-element! body) 
-    (links/replace-the-links! body complico-host original-host)
-    (add-ribbon-link! complico-host)
-    (prices/replace-prices-in-dom! body)))
+    (-> body
+      (hide-existing-form-element!) 
+      (prices/replace-prices-in-dom!)
+      (links/replace-the-links! complico-host original-host)
+      (add-ribbon-link! complico-host))))
 
 ;call function on window.onload
 (set! (.-onload js/window) adjust-page)
