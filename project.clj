@@ -23,7 +23,9 @@
   :uberjar-name "complico.jar"
   :plugins  [[lein-ring "0.8.3"]
              [lein-cljsbuild "1.0.3"]
-             [com.cemerick/clojurescript.test "0.3.1"]]
+             [com.cemerick/clojurescript.test "0.3.1"]
+             [venantius/ultra "0.2.1"]]
+  :ultra {:color-scheme :solarized_dark}
   :ring  {:handler complico.core/app}
   :hooks [leiningen.cljsbuild]
   ; clojurescript settings
