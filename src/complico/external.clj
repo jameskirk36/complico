@@ -3,7 +3,7 @@
 
 (defn get-location [url]
   (-> url
-    (client/head)
+    (client/get)
     (:trace-redirects)
     (last)))
 
