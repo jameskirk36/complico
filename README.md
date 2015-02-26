@@ -31,6 +31,8 @@ Then run the command:
 
 ```Batchfile
 vagrant up
+vagrant ssh
+cd /vagrant
 ```
 
 ## Setting up manually
