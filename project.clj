@@ -45,14 +45,14 @@
                   :pretty-print true}}
       ; This build has the highest level of optimizations, so it is
       ; efficient when running the app in production.
-;      :prod
-;      {:source-paths ["src-cljs"]
-;       :compiler {:output-to "resources/public/js/complico.js"
-;                  :optimizations :advanced
-;                  :pretty-print false}}
-;      ; This build is for the ClojureScript unit tests that will
-;      ; be run via PhantomJS.  See the phantom/unit-test.js file
-;      ; for details on how it's run.
+      :prod
+      {:source-paths ["src-cljs"]
+       :compiler {:output-to "resources/public/js/complico.js"
+                  :optimizations :advanced
+                  :pretty-print false}}
+      ; This build is for the ClojureScript unit tests that will
+      ; be run via PhantomJS.  See the phantom/unit-test.js file
+      ; for details on how it's run.
       :test
       {:source-paths ["src-cljs" "test-cljs"]
        :compiler {:output-to "resources/private/js/unit-test.js"

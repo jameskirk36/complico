@@ -15,4 +15,4 @@
       {:id "complico_host_vars"
        :original_host_name original-host
        :complico_host_name complico-host
-       :src (str complico-host "/js/complico-debug.js")}]))
+       :src (str complico-host "/js/complico.js")}]))
