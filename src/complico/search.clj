@@ -16,7 +16,7 @@
     (build-search-url)
     (external/get-location)))
 
-(defn get-url [search-term host is-test]
-  (if is-test
+(defn get-url [{search-term "search-term"} host {is-test "test"}]
+  (if (not (nil? is-test))
     (get-test-location host)
     (get-external-location search-term)))

@@ -12,32 +12,25 @@
             [ring.util.codec :as codec]
             [compojure.route :as route]))
 
-(defn- load-page-for-conversion [url ua complico-host]
+(defn- load-page-for-conversion [{url "url"} complico-host {ua "user-agent"}]
   (let [original-page-html (external/request-url-page url ua)
         original-host (utils/extract-host url)
         prefix (view/create-base-html original-host)
         suffix (view/create-cljs-html original-host complico-host)]
     (str prefix original-page-html suffix)))
 
-(defn- is-test [cookies]
-  (not (nil? (get (cookies "test") :value))))
-
 (defroutes my-handler
   (GET "/" [] 
     view/home-page)
 
   (GET "/search" {params :query-params complico-host :complico-host cookies :cookies}
-    (let [search-term (params "search-term")
-          url (search/get-url search-term complico-host (is-test cookies))]
-      (->> url
+      (->> (search/get-url params complico-host cookies)
         (codec/url-encode)
         (str complico-host "/convert?url=")
-        (response/redirect))))
+        (response/redirect)))
 
   (GET "/convert" {params :query-params complico-host :complico-host headers :headers}
-    (let [url (params "url")
-          ua (headers "user-agent")]
-      (load-page-for-conversion url ua complico-host)))
+    (load-page-for-conversion params complico-host headers))
 
   (route/resources "/")
   (route/not-found "Page not found"))
