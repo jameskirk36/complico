@@ -44,12 +44,9 @@
       (apply currency price nil)
       (to-html))))
 
-(defn- build-replacement [price-parts]
-  (let [original-price (first price-parts)
-        currency (second price-parts)
-        price (nth price-parts 2)
-        replacement-price (convert-price currency price select-conv-func funcs/conversion-functions)] 
-  (vector original-price replacement-price))) 
+(defn- build-replacement [[original-price currency price]]
+  (let [replacement-price (convert-price currency price select-conv-func funcs/conversion-functions)] 
+    (vector original-price replacement-price))) 
 
 (defn- convert-prices [prices]
   (map build-replacement prices))
