@@ -12,7 +12,6 @@
                   [ring-mock "0.1.5"]
                   [ring-serve "0.1.2"]
                   [compojure "1.3.1"]
-                  [selmer "0.7.1"]
                   [hiccup "1.0.5"]
                   [prismatic/dommy "0.1.3"]
                   [hipo "0.3.0"]

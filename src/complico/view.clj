@@ -1,9 +1,5 @@
 (ns complico.view
-  (:require [selmer.parser :as selmer]
-            [hiccup.core :as hiccup]))
-
-(def home-page 
-  (selmer/render-file "templates/index.html" {}))
+  (:require [hiccup.core :as hiccup]))
 
 (defn create-base-html [url]
   (hiccup/html

@@ -8,6 +8,17 @@ margin:0;
 padding:0;
 }
 
+span#disclaimer {
+font-family:DDG_ProximaNova,DDG_ProximaNova_UI_1,DDG_ProximaNova_UI_2,DDG_ProximaNova_UI_3,DDG_ProximaNova_UI_4,DDG_ProximaNova_UI_5,DDG_ProximaNova_UI_6,"Proxima Nova","Helvetica Neue",Helvetica,"Segoe UI","Nimbus Sans L","Liberation Sans","Open Sans",FreeSans,Arial,sans-serif;
+color:#999;
+display: block;
+width:100%;
+height:100%;
+text-align:center;
+padding-top:1.5em;
+padding-bottom:1.5em;
+}
+
 html {
 line-height:1;
 overflow:hidden;
@@ -356,7 +367,7 @@ h6,.h-xs,.t-m,.use-opts .opt--t-m,.no-results {
 font-size:1.1667em;
 }
 
-small,.t-s,.result__snippet,.result__extras,.nav-menu__item,.use-opts .opt--t-s,.acp__snippet,.zci__body .chomp--link,.zci__more-at,.zci__more-at--info {
+small,.t-s,.result__snippet,.result__extras,.nav-menu__item,.use-opts .opt--t-s,.acp__snippet,.zci__body .chomp--link,.zci__more-at,.zci__more-at--info,span#disclaimer {
 font-size:.9167em;
 }
 

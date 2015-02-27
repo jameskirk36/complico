@@ -21,7 +21,7 @@
 
 (defroutes my-handler
   (GET "/" [] 
-    view/home-page)
+    (response/resource-response "index.html" {:root "public"}))
 
   (GET "/search" {params :query-params complico-host :complico-host cookies :cookies}
       (->> (search/get-url params complico-host cookies)
