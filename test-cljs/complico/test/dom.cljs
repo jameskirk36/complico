@@ -11,7 +11,8 @@
    [complico.dom-helper :as dom-helper]
    [cemerick.cljs.test :as t]))
 
-(defn confirm-text-was-set-to [actual-text expected-text]
+(defn confirm-text-was-set-to 
+  [actual-text expected-text]
   (is (= actual-text expected-text)))
 
 (deftest should-hide-existing-form-element

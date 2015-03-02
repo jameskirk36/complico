@@ -12,7 +12,8 @@
             [ring.util.codec :as codec]
             [compojure.route :as route]))
 
-(defn- load-page-for-conversion [{url "url"} complico-host {ua "user-agent"}]
+(defn- load-page-for-conversion 
+  [{url "url"} complico-host {ua "user-agent"}]
   (let [original-page-html (external/request-url-page url ua)
         original-host (utils/extract-host url)
         prefix (view/create-base-html original-host)
@@ -20,16 +21,19 @@
     (str prefix original-page-html suffix)))
 
 (defroutes my-handler
-  (GET "/" [] 
+  (GET "/" 
+    [] 
     (response/resource-response "index.html" {:root "public"}))
 
-  (GET "/search" {params :query-params complico-host :complico-host cookies :cookies}
-      (->> (search/get-url params complico-host cookies)
-        (codec/url-encode)
-        (str complico-host "/convert?url=")
-        (response/redirect)))
+  (GET "/search" 
+    {params :query-params complico-host :complico-host cookies :cookies}
+    (->> (search/get-url params complico-host cookies)
+      (codec/url-encode)
+      (str complico-host "/convert?url=")
+      (response/redirect)))
 
-  (GET "/convert" {params :query-params complico-host :complico-host headers :headers}
+  (GET "/convert" 
+    {params :query-params complico-host :complico-host headers :headers}
     (load-page-for-conversion params complico-host headers))
 
   (route/resources "/")
@@ -43,7 +47,8 @@
     (wrap-complico-host)))
 
 ; entry point for running on heroku
-(defn -main [port]
+(defn -main 
+  [port]
   (jetty/run-jetty app {:port (Integer. port) :join? false}))
 
 

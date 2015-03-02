@@ -1,7 +1,8 @@
 (ns complico.utils
   (:require [clojure.string :as string]))
 
-(defn extract-host [url]
+(defn extract-host 
+  [url]
   (str  
     (string/join "/" 
       (take 3 

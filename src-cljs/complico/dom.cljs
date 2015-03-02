@@ -16,10 +16,12 @@
   ISeqable
   (-seq [array] (array-seq array 0)))
 
-(defn- extract-host-from-dom [host]
+(defn- extract-host-from-dom 
+  [host]
   (attrs/attr (sel1 :#complico_host_vars) (keyword host)))
 
-(defn- add-ribbon-link! [body complico-host]
+(defn- add-ribbon-link! 
+  [body complico-host]
   (dommy/append! body 
     (hipo/create 
       [:a#complico-ribbon-link
@@ -28,12 +30,14 @@
           {:style "position: fixed; top: 0; right: 0; border: 0; z-index: 9000;"
            :src (str complico-host "/images/ribbon.png")}]])))
 
-(defn hide-existing-form-element! [root-node]
+(defn hide-existing-form-element! 
+  [root-node]
   (if-let [form (sel1 root-node :form)]
     (attrs/set-attr! form :style "display: none;"))
   root-node)
 
-(defn adjust-page []
+(defn adjust-page 
+  []
   (let [original-host (extract-host-from-dom "original_host_name")
         complico-host (extract-host-from-dom "complico_host_name")
         body (sel1 :body)]

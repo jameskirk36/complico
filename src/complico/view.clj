@@ -1,11 +1,13 @@
 (ns complico.view
   (:require [hiccup.core :as hiccup]))
 
-(defn create-base-html [url]
+(defn create-base-html 
+  [url]
   (hiccup/html
     [:head [:base {:href url}]]))
 
-(defn create-cljs-html [original-host complico-host]
+(defn create-cljs-html 
+  [original-host complico-host]
   (hiccup/html
     [:script 
       {:id "complico_host_vars"

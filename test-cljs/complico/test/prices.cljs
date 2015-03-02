@@ -12,10 +12,12 @@
 ; needed to console.log works!
 (enable-console-print!)
 
-(defn get-extracted-currency [prices]
+(defn get-extracted-currency 
+  [prices]
   (second (first prices)))
 
-(defn get-extracted-price [prices]
+(defn get-extracted-price 
+  [prices]
   (nth (first prices) 2))
 
 (deftest find-prices-british-pounds
@@ -40,19 +42,23 @@
   (are [elem] (-> elem (create-test-dom) (prices/find-elems) (count) (= 1))
    :div :span :li :a :p :em :td :strong))
 
-(defn dom-with-two-price-elems []
+(defn dom-with-two-price-elems 
+  []
   (hipo/create [:body [:div [:ol] [:span]]]))
 
 (deftest finds-multiple-allowed-price-elems
   (is (= 2 (count (prices/find-elems (dom-with-two-price-elems))))))
 
-(defn confirm-text-was-set-to [actual-text expected-text]
+(defn confirm-text-was-set-to 
+  [actual-text expected-text]
   (is (= actual-text expected-text)))
 
-(defn confirm-text-remains [actual-text expected-text]
+(defn confirm-text-remains 
+  [actual-text expected-text]
   (is (= actual-text expected-text)))
 
-(defn complex-dom-with-price []
+(defn complex-dom-with-price 
+  []
   (hipo/create [:body [:div [:div#with-price "£0"]]]))
 
 (deftest replace-price-in-complex-dom-should-find-and-replace-price
@@ -62,7 +68,8 @@
     (dom-helper/get-text-from-node)
     (confirm-text-was-set-to "£XXX")))
 
-(defn dom-with-price-but-higher-text-node []
+(defn dom-with-price-but-higher-text-node 
+  []
   (hipo/create [:body [:div "   " [:div#with-price "£0"]]]))
 
 (deftest replace-price-in-dom-should-not-overwrite-innerhtml-on-higher-empty-text-nodes
@@ -90,7 +97,8 @@
         mock-conv-func-selector (fn [_ conv-funcs] (first conv-funcs))]
     (is (= (prices/convert-price "£" "1,000" mock-conv-func-selector mock-conv-funcs) "1000"))))
 
-(defn create-elem-with-text [text]
+(defn create-elem-with-text 
+  [text]
   (hipo/create [:div text]))
 
 (deftest should-replace-price-on-elem

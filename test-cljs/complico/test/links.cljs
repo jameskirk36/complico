@@ -24,7 +24,8 @@
   (let [link "page"]
     (is (= (links/grease-the-link host grease link) expected-greased-link))))
 
-(defn create-test-dom [elem]
+(defn create-test-dom 
+  [elem]
   (hipo/create [:body [elem {:href "somelink"}]]))
 
 (deftest finds-allowed-links-elems

@@ -1,11 +1,13 @@
 (ns complico.middleware)
 
-(defn- create-host [server port]
+(defn- create-host 
+  [server port]
   (if (= server "localhost") 
     (str "http://" server ":" port)
   (str "http://" server)))
 
-(defn wrap-complico-host [handler]
+(defn wrap-complico-host 
+  [handler]
   (fn [req] 
     (let [server (:server-name req)
           port (:server-port req)]

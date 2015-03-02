@@ -6,13 +6,16 @@
 
 (defonce server (jetty/run-jetty #'core/app {:port 3000 :join? false}))
 
-(defn browser-up []
+(defn browser-up 
+  []
   (set-driver! {:browser :phantomjs}))
 
-(defn browser-down [] 
+(defn browser-down 
+  [] 
   (quit))
 
-(defn setup-teardown-fixtures [f]
+(defn setup-teardown-fixtures 
+  [f]
   (.start server)
   (browser-up)
   (f)
@@ -28,18 +31,22 @@
 (def link-to-page-with-links "a#test_page_with_links")
 (def ribbon-link "a#complico-ribbon-link")
 
-(defn extract-price-from [element-name]
+(defn extract-price-from 
+  [element-name]
   (text (element (str element-name "#price"))))
 
-(defn extract-link-from-page []
+(defn extract-link-from-page 
+  []
   (attribute link-to-page-with-links :href))
 
-(defn perform-search []
+(defn perform-search 
+  []
   (-> "input#search_form_input_homepage"
     (input-text "search-term-goes-here")
     submit))
 
-(defn existing-form-hidden? [] 
+(defn existing-form-hidden? 
+  [] 
   (not (displayed? "form")))
 
 (deftest user-journey-does-it-basically-work

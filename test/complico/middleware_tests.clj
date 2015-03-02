@@ -2,8 +2,7 @@
   (:use [clojure.test])
   (:require [complico.middleware :as middleware]))
 
-(defn handler [req]
-  req)
+(defn handler [req] req)
 
 (deftest wrap-complico-host-should-add-portless-host-when-localhost
   (let [req  {:server-name "localhost" :server-port "80"}
