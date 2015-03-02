@@ -53,6 +53,8 @@
   (to home-page)
   (add-cookie {:name "test" :value ""})
   (perform-search)
+  
+  (is (= "Complico" (title)))
 
   ; need this check because we are hosting page on same server!
   (is (= (extract-link-from-page) expected-link))

@@ -6,6 +6,10 @@
   (hiccup/html
     [:head [:base {:href url}]]))
 
+(defn create-title-html
+  []
+  (hiccup/html [:title "Complico"]))
+
 (defn create-cljs-html 
   [original-host complico-host]
   (hiccup/html

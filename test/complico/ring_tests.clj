@@ -19,7 +19,6 @@
       (is (.contains 
               (:body response) 
               expected-base-html))))
-
   ;stop the ring server
   (stop-server))
 
