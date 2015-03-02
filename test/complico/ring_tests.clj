@@ -15,7 +15,7 @@
   ; sadly clj-webdriver doesnt detect the base element, hence why we have to test it here
   (testing "should add base element to request body to preserve style"
     (let [response (app (request :get "/convert" {:url test-url} ))]
-      (is (= (:status response) 200))
+      (is (= 200 (:status response)))
       (is (.contains 
               (:body response) 
               expected-base-html))))

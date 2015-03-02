@@ -57,15 +57,15 @@
   (is (= "Complico" (title)))
 
   ; need this check because we are hosting page on same server!
-  (is (= (extract-link-from-page) expected-link))
+  (is (= expected-link (extract-link-from-page)))
   (is (existing-form-hidden?))
   (click link-to-page-with-links)
   (click link-to-page-with-prices)
-  (is (= (extract-price-from "div") expected-price)))
+  (is (= expected-price (extract-price-from "div"))))
 
 (deftest clicking-on-ribbon-goes-back-to-homepage
   (to home-page)
   (add-cookie {:name "test" :value ""})
   (perform-search)
   (click ribbon-link)
-  (is (= (current-url) home-page)))
+  (is (= home-page (current-url))))

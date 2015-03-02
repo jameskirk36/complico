@@ -5,5 +5,5 @@
 		[complico.search :as search]))
 
 (deftest should-get-external-location-smoke-test
-  (is (= (search/get-external-location "ebay") "http://www.ebay.co.uk/")))
+  (is (= "http://www.ebay.co.uk/" (search/get-external-location "ebay"))))
 

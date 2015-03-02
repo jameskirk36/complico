@@ -14,15 +14,15 @@
 
 (deftest grease-the-link-full
   (let [link "http://someurl.com/page"]
-    (is (= (links/grease-the-link host grease link) expected-greased-link))))
+    (is (= expected-greased-link (links/grease-the-link host grease link)))))
 
 (deftest grease-the-link-relative-with-slash
   (let [link "/page"]
-    (is (= (links/grease-the-link host grease link) expected-greased-link))))
+    (is (= expected-greased-link (links/grease-the-link host grease link)))))
 
 (deftest grease-the-link-relative-no-slash
   (let [link "page"]
-    (is (= (links/grease-the-link host grease link) expected-greased-link))))
+    (is (= expected-greased-link (links/grease-the-link host grease link)))))
 
 (defn create-test-dom 
   [elem]

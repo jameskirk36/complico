@@ -21,19 +21,19 @@
   (nth (first prices) 2))
 
 (deftest find-prices-british-pounds
-  (is (= (get-extracted-currency (prices/find-prices "£3")) "£")))
+  (is (= "£" (get-extracted-currency (prices/find-prices "£3")))))
 
 (deftest find-prices-american-dollars
-  (is (= (get-extracted-currency (prices/find-prices "$3")) "$")))
+  (is (= "$" (get-extracted-currency (prices/find-prices "$3")))))
 
 (deftest find-prices-case-single 
-  (is (= (get-extracted-price (prices/find-prices "£3")) "3")))
+  (is (= "3" (get-extracted-price (prices/find-prices "£3")))))
 
 (deftest find-prices-case-hundreds
-  (is (= (get-extracted-price (prices/find-prices "£300")) "300")))
+  (is (= "300" (get-extracted-price (prices/find-prices "£300")))))
 
 (deftest find-prices-case-thousands
-  (is (= (get-extracted-price (prices/find-prices "£3,000.00")) "3,000.00")))
+  (is (= "3,000.00" (get-extracted-price (prices/find-prices "£3,000.00")))))
 
 (defn create-test-dom [elem]
   (hipo/create [:body [elem]]))
@@ -51,11 +51,11 @@
 
 (defn confirm-text-was-set-to 
   [actual-text expected-text]
-  (is (= actual-text expected-text)))
+  (is (= expected-text actual-text)))
 
 (defn confirm-text-remains 
   [actual-text expected-text]
-  (is (= actual-text expected-text)))
+  (is (= expected-text actual-text)))
 
 (defn complex-dom-with-price 
   []
@@ -81,21 +81,21 @@
 
 (deftest select-conv-func-should-select-from-conversion-function-list-using-price-value-as-list-index-with-modulus
   (let [mock-price-conversion-funcs [(fn [_ _]) (fn [_ _]) (fn [_ _])]]
-    (is (= (prices/select-conv-func "1.99" mock-price-conversion-funcs) (nth mock-price-conversion-funcs 0)))  
-    (is (= (prices/select-conv-func "2.99" mock-price-conversion-funcs) (nth mock-price-conversion-funcs 1)))  
-    (is (= (prices/select-conv-func "3.99" mock-price-conversion-funcs) (nth mock-price-conversion-funcs 2)))))
+    (is (= (nth mock-price-conversion-funcs 0) (prices/select-conv-func "1.99" mock-price-conversion-funcs)))  
+    (is (= (nth mock-price-conversion-funcs 1) (prices/select-conv-func "2.99" mock-price-conversion-funcs)))  
+    (is (= (nth mock-price-conversion-funcs 2) (prices/select-conv-func "3.99" mock-price-conversion-funcs)))))
 
 (deftest convert-price-should-call-select-conv-func
   (let [mock-conv-func (fn [_ price] (hipo/create [:div price]))
         mock-conv-funcs [mock-conv-func]
         mock-conv-func-selector (fn [_ conv-funcs] (first conv-funcs))]
-    (is (= (prices/convert-price "£" "1.99" mock-conv-func-selector mock-conv-funcs) "1.99"))))
+    (is (= "1.99" (prices/convert-price "£" "1.99" mock-conv-func-selector mock-conv-funcs)))))
 
 (deftest convert-price-should-remove-commas-in-prices-with-thousands
   (let [mock-conv-func (fn [_ price] (hipo/create [:div price]))
         mock-conv-funcs [mock-conv-func]
         mock-conv-func-selector (fn [_ conv-funcs] (first conv-funcs))]
-    (is (= (prices/convert-price "£" "1,000" mock-conv-func-selector mock-conv-funcs) "1000"))))
+    (is (= "1000" (prices/convert-price "£" "1,000" mock-conv-func-selector mock-conv-funcs)))))
 
 (defn create-elem-with-text 
   [text]

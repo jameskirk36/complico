@@ -13,7 +13,7 @@
 
 (defn confirm-text-was-set-to 
   [actual-text expected-text]
-  (is (= actual-text expected-text)))
+  (is (= expected-text actual-text)))
 
 (deftest should-hide-existing-form-element
   (let [root-elem (hipo/create [:body [:form]])]
