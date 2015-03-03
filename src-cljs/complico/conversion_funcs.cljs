@@ -33,4 +33,12 @@
                    [:span {:style "white-space: nowrap; font-size:larger"} (gstring/unescapeEntities "&radic;")
                      [:span {:style "text-decoration:overline;"} (str currency new-price)]]])))
 
-(def conversion-functions [divide-by-two squared square-root])
+(defn divide-times 
+ [currency price & args]
+ (let [new-price (-> price
+                    (/ 9.9)
+                    (* 5.99)
+                    (apply-price-formatting))]
+    (hipo/create [:div (str currency new-price " / " currency "5.99 x 9.9")])))
+
+(def conversion-functions [divide-by-two squared square-root divide-times])
