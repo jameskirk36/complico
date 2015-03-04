@@ -47,9 +47,7 @@
         price (-> raw-price 
                 (sanitise)
                 (js/parseFloat))]
-    (-> conv-func
-      (apply currency price nil)
-      (to-html))))
+    (to-html (conv-func currency price))))
 
 (defn- build-replacement 
   [[original-price currency price]]
@@ -66,10 +64,7 @@
 
 (defn- build-new-price-text 
   [text replacement-prices]
-  (reduce 
-    #(apply clojure.string/replace %1 %2)
-    text
-    replacement-prices))
+  (reduce #(apply clojure.string/replace %1 %2) text replacement-prices))
 
 (defn- convert-price-in-text 
   [prices original-text]

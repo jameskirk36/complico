@@ -10,14 +10,14 @@
   (gstring/format "%.2f" price))
 
 (defn divide-by-two 
-  [currency price & args] 
+  [currency price] 
   (let [new-price (-> price
                     (* 2.0)
                     (apply-price-formatting))]
     (hipo/create [:div (str currency new-price " / " currency "2.00")])))
 
 (defn squared 
-  [currency price & args] 
+  [currency price] 
   (let [new-price (-> price
                     (Math/sqrt)
                     (apply-price-formatting))]
@@ -25,7 +25,7 @@
                    [:sup {:style "font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; top: -0.5em;"} "2"]])))
 
 (defn square-root 
-  [currency price & args] 
+  [currency price] 
   (let [new-price (-> price
                     (* price)
                     (apply-price-formatting))]
@@ -34,7 +34,7 @@
                      [:span {:style "text-decoration:overline;"} (str currency new-price)]]])))
 
 (defn divide-times 
- [currency price & args]
+ [currency price]
  (let [new-price (-> price
                     (/ 9.9)
                     (* 5.99)
