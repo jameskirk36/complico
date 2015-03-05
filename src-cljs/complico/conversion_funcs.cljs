@@ -41,4 +41,11 @@
                     (apply-price-formatting))]
     (hipo/create [:div (str currency new-price " / " currency "5.99 x 9.9")])))
 
-(def conversion-functions [divide-by-two squared square-root divide-times])
+(defn times-pi
+  [currency price] 
+  (let [new-price (-> price
+                    (/ Math/PI)
+                    (apply-price-formatting))]
+    (hipo/create [:div (str currency new-price " x π")])))
+
+(def conversion-functions [divide-by-two squared square-root divide-times times-pi])
