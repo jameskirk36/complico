@@ -7,7 +7,6 @@
             [complico.middleware :refer [wrap-complico-host]]
             [ring.adapter.jetty :as jetty]
             [ring.util.response :as response]
-            [ring.util.codec :as codec]
             [compojure.route :as route]))
 
 (defroutes my-handler
@@ -17,9 +16,7 @@
 
   (GET "/search" 
     {params :query-params complico-host :complico-host cookies :cookies}
-    (->> (search/get-url params complico-host cookies)
-      (codec/url-encode)
-      (str complico-host "/convert?url=")
+    (-> (search/build-url-for-conversion params complico-host cookies)
       (response/redirect)))
 
   (GET "/convert" 
